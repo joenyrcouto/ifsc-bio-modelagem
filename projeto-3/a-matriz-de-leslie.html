@@ -143,396 +143,93 @@ window.Quarto = {
 <section id="construção-da-matriz-de-leslie" class="level2">
 <h2 class="anchored" data-anchor-id="construção-da-matriz-de-leslie">Construção da Matriz de Leslie</h2>
 <p>A matriz de Leslie <span class="math inline">\(\mathbf{L}\)</span> é uma matriz quadrada de ordem <span class="math inline">\(11\)</span>, onde a primeira linha contém as taxas de fertilidade <span class="math inline">\(f_i\)</span> (número médio de filhas nascidas vivas por mulher na classe <span class="math inline">\(i\)</span> durante um intervalo de 5 anos) e a subdiagonal contém as probabilidades de sobrevivência <span class="math inline">\(s_i\)</span> (probabilidade de uma mulher na classe <span class="math inline">\(i\)</span> passar para a classe <span class="math inline">\(i+1\)</span> após 5 anos). As demais entradas são nulas. Para os dados fornecidos, construiu-se a matriz <span class="math inline">\(\mathbf{L}\)</span> explicitamente.</p>
-<div class="cell" data-execution_count="2">
-<div id="tbl-matriz-leslie" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
+<div id="tbl-matriz-leslie" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-matriz-leslie-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;1: Matriz de Leslie <span class="math inline">\(\mathbf{L}\)</span> completa (11 <span class="math inline">\(\times\)</span> 11).
 </figcaption>
 <div aria-describedby="tbl-matriz-leslie-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown">
-<table class="cell caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-<col style="width: 9%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Classe 1</th>
-<th>Classe 2</th>
-<th>Classe 3</th>
-<th>Classe 4</th>
-<th>Classe 5</th>
-<th>Classe 6</th>
-<th>Classe 7</th>
-<th>Classe 8</th>
-<th>Classe 9</th>
-<th>Classe 10</th>
-<th>Classe 11</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>0.0</td>
-<td>0.0005</td>
-<td>0.0121</td>
-<td>0.1534</td>
-<td>0.3891</td>
-<td>0.4502</td>
-<td>0.3121</td>
-<td>0.1895</td>
-<td>0.0562</td>
-<td>0.0051</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<td>0.9912</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="odd">
-<td>0.0</td>
-<td>0.9989</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.9985</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="odd">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.9972</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.9961</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="odd">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.995</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.9935</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="odd">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.991</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.9871</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="odd">
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.9812</td>
-<td>0.0</td>
-</tr>
-</tbody>
-</table>
+<div>
+
 </div>
 </div>
 </figure>
-</div>
 </div>
 </section>
 <section id="análise-do-crescimento-a-longo-prazo" class="level2">
 <h2 class="anchored" data-anchor-id="análise-do-crescimento-a-longo-prazo">Análise do Crescimento a Longo Prazo</h2>
 <p>Calculam-se todos os autovalores da matriz <span class="math inline">\(\mathbf{L}\)</span>. O autovalor dominante <span class="math inline">\(\lambda_1\)</span> é aquele com o maior módulo e, para matrizes de Leslie biologicamente plausíveis, é real e positivo. Ele representa a taxa finita de crescimento da população a cada 5 anos: se <span class="math inline">\(\lambda_1 &gt; 1\)</span>, a população cresce; se <span class="math inline">\(\lambda_1 = 1\)</span>, permanece estável; se <span class="math inline">\(\lambda_1 &lt; 1\)</span>, declina.</p>
-<div class="cell" data-execution_count="3">
-<div id="tbl-autovalores" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<div id="tbl-autovalores" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-autovalores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;2: Todos os autovalores da matriz de Leslie (ordenados por módulo decrescente).
 </figcaption>
 <div aria-describedby="tbl-autovalores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown">
-<table class="cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th>Índice</th>
-<th>Parte Real</th>
-<th>Parte Imag.</th>
-<th>Módulo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1</td>
-<td>1.0741</td>
-<td>0.0</td>
-<td>1.0741</td>
-</tr>
-<tr class="even">
-<td>2</td>
-<td>0.4715</td>
-<td>-0.775</td>
-<td>0.9071</td>
-</tr>
-<tr class="odd">
-<td>3</td>
-<td>0.4715</td>
-<td>0.775</td>
-<td>0.9071</td>
-</tr>
-<tr class="even">
-<td>4</td>
-<td>-0.4423</td>
-<td>-0.5088</td>
-<td>0.6742</td>
-</tr>
-<tr class="odd">
-<td>5</td>
-<td>-0.4423</td>
-<td>0.5088</td>
-<td>0.6742</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>-0.0181</td>
-<td>-0.6238</td>
-<td>0.624</td>
-</tr>
-<tr class="odd">
-<td>7</td>
-<td>-0.0181</td>
-<td>0.6238</td>
-<td>0.624</td>
-</tr>
-<tr class="even">
-<td>8</td>
-<td>-0.6127</td>
-<td>0.0</td>
-<td>0.6127</td>
-</tr>
-<tr class="odd">
-<td>9</td>
-<td>-0.3306</td>
-<td>0.0</td>
-<td>0.3306</td>
-</tr>
-<tr class="even">
-<td>10</td>
-<td>-0.1528</td>
-<td>0.0</td>
-<td>0.1528</td>
-</tr>
-<tr class="odd">
-<td>11</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-</tbody>
-</table>
+<div>
+
 </div>
 </div>
 </figure>
 </div>
-</div>
-<p>O autovalor dominante é <span class="math inline">\(\lambda_1 = 1.0741\)</span> (real positivo). Como <span class="math inline">\(\lambda_1 &gt; 1\)</span>, a população feminina do País X está em crescimento. A taxa de crescimento por período de 5 anos é de <span class="math inline">\((\lambda_1 - 1) \times 100\% = 7.41\%\)</span>.</p>
+<p>O autovalor dominante é <span class="math inline">\(\lambda_1 = `{julia} round(real(vals_sorted[1]), digits=4)`\)</span> (real positivo). Como <span class="math inline">\(\lambda_1 &gt; 1\)</span>, a população feminina do País X está em crescimento. A taxa de crescimento por período de 5 anos é de <span class="math inline">\((\lambda_1 - 1) \times 100\% = `{julia} round((real(vals_sorted[1]) - 1)*100, digits=2)`\%\)</span>.</p>
 </section>
 <section id="a-distribuição-etária-estável" class="level2">
 <h2 class="anchored" data-anchor-id="a-distribuição-etária-estável">A Distribuição Etária Estável</h2>
 <p>O autovetor dominante <span class="math inline">\(\mathbf{v}_1\)</span> associado a <span class="math inline">\(\lambda_1\)</span> fornece a estrutura etária relativa. Normalizando-o, obtém-se a distribuição percentual estável <span class="math inline">\(\mathbf{u}_1 = \mathbf{v}_1 / \sum(\mathbf{v}_1)\)</span>. A <a href="#tbl-distribuicao" class="quarto-xref">Tabela&nbsp;3</a> apresenta esses valores, e a <a href="#fig-distribuicao" class="quarto-xref">Fig.&nbsp;1</a> mostra o gráfico de barras.</p>
-<div class="cell" data-execution_count="4">
-<div id="tbl-distribuicao" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<div id="tbl-distribuicao" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-distribuicao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Tabela&nbsp;3: Distribuição etária estável (porcentagem da população feminina em cada classe de idade).
 </figcaption>
 <div aria-describedby="tbl-distribuicao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display cell-output-markdown">
-<table class="cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th>Classe etária</th>
-<th>% estável</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>0-4</td>
-<td>12.94%</td>
-</tr>
-<tr class="even">
-<td>5-9</td>
-<td>11.94%</td>
-</tr>
-<tr class="odd">
-<td>10-14</td>
-<td>11.1%</td>
-</tr>
-<tr class="even">
-<td>15-19</td>
-<td>10.32%</td>
-</tr>
-<tr class="odd">
-<td>20-24</td>
-<td>9.58%</td>
-</tr>
-<tr class="even">
-<td>25-29</td>
-<td>8.89%</td>
-</tr>
-<tr class="odd">
-<td>30-34</td>
-<td>8.23%</td>
-</tr>
-<tr class="even">
-<td>35-39</td>
-<td>7.62%</td>
-</tr>
-<tr class="odd">
-<td>40-44</td>
-<td>7.03%</td>
-</tr>
-<tr class="even">
-<td>45-49</td>
-<td>6.46%</td>
-</tr>
-<tr class="odd">
-<td>50-54</td>
-<td>5.9%</td>
-</tr>
-</tbody>
-</table>
+<div>
+
 </div>
 </div>
 </figure>
 </div>
-</div>
-<div id="cell-fig-distribuicao" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display" data-execution_count="7">
-<div id="fig-distribuicao" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-distribuicao" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-distribuicao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="a-matriz-de-leslie_files/figure-html/fig-distribuicao-output-1.svg" class="img-fluid figure-img">
+<div>
+
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribuicao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;1: Distribuição etária estável da população feminina do País X.
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-distribuicao-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1
 </figcaption>
 </figure>
 </div>
-</div>
-</div>
-<p>A distribuição etária estável é fortemente inclinada para as idades mais jovens: a classe 0-4 anos concentra aproximadamente 12.94% da população, e as proporções diminuem gradualmente com a idade. Isso é típico de populações em crescimento.</p>
+<p>A distribuição etária estável é fortemente inclinada para as idades mais jovens: a classe 0-4 anos concentra aproximadamente <code>{julia} round(porcentagem[1], digits=2)</code>% da população, e as proporções diminuem gradualmente com a idade. Isso é típico de populações em crescimento.</p>
 </section>
 <section id="verificação-numérica-da-conjectura-de-leslie" class="level2">
 <h2 class="anchored" data-anchor-id="verificação-numérica-da-conjectura-de-leslie">Verificação Numérica da Conjectura de Leslie</h2>
-<p>A conjectura de Leslie afirma que, para uma matriz de Leslie irredutível e aperiódica, existe um único autovalor real positivo que é estritamente maior em módulo do que todos os outros. Analisando os autovalores obtidos, observa-se que o autovalor dominante é <span class="math inline">\(\lambda_1 = 1.0741\)</span>, com parte imaginária nula, sendo portanto real e positivo. Além disso, os demais autovalores são todos inferiores a 1, confirmando que <span class="math inline">\(|\lambda_1|\)</span> é estritamente maior que <span class="math inline">\(|\lambda_j|\)</span> para <span class="math inline">\(j&gt;1\)</span>. Portanto, a conjectura de Leslie é validada numericamente para esta matriz. Biologicamente, essa propriedade garante que, a partir de qualquer distribuição etária inicial não negativa e não nula, a população converge para a estrutura estável dada pelo autovetor dominante, com taxa de crescimento determinada por <span class="math inline">\(\lambda_1\)</span>, independentemente das condições iniciais.</p>
+<p>A conjectura de Leslie afirma que, para uma matriz de Leslie irredutível e aperiódica, existe um único autovalor real positivo que é estritamente maior em módulo do que todos os outros. Analisando os autovalores obtidos, observa-se que o autovalor dominante é <span class="math inline">\(\lambda_1 = `{julia} round(real(vals_sorted[1]), digits=4)`\)</span>, com parte imaginária nula, sendo portanto real e positivo. Além disso, os demais autovalores são todos inferiores a 1, confirmando que <span class="math inline">\(|\lambda_1|\)</span> é estritamente maior que <span class="math inline">\(|\lambda_j|\)</span> para <span class="math inline">\(j&gt;1\)</span>. Portanto, a conjectura de Leslie é validada numericamente para esta matriz. Biologicamente, essa propriedade garante que, a partir de qualquer distribuição etária inicial não negativa e não nula, a população converge para a estrutura estável dada pelo autovetor dominante, com taxa de crescimento determinada por <span class="math inline">\(\lambda_1\)</span>, independentemente das condições iniciais.</p>
 <div style="page-break-after: always;"></div>
 </section>
 </section>
 <section id="conclusão" class="level1 unnumbered">
 <h1 class="unnumbered">Conclusão</h1>
-<p>O estudo da matriz de Leslie para a população feminina do País X permitiu quantificar sua dinâmica futura sob a hipótese de constância das taxas de fertilidade e mortalidade. O autovalor dominante <span class="math inline">\(\lambda_1 = 1.0741\)</span> indica que a população está crescendo a uma taxa de aproximadamente 7.41% a cada cinco anos (crescimento anual médio de cerca de 1.44%). A distribuição etária estável mostra uma população jovem, com 12.94% das mulheres na faixa de 0-4 anos, típica de países em transição demográfica. A verificação numérica da conjectura de Leslie confirmou que <span class="math inline">\(\lambda_1\)</span> é o único autovalor real positivo e de maior módulo, garantindo a convergência para a estrutura estável independentemente da condição inicial.</p>
+<p>O estudo da matriz de Leslie para a população feminina do País X permitiu quantificar sua dinâmica futura sob a hipótese de constância das taxas de fertilidade e mortalidade. O autovalor dominante <span class="math inline">\(\lambda_1 = `{julia} round(real(vals_sorted[1]), digits=4)`\)</span> indica que a população está crescendo a uma taxa de aproximadamente <code>{julia} round((real(vals_sorted[1]) - 1)*100, digits=2)</code>% a cada cinco anos (crescimento anual médio de cerca de <code>{julia} round(real(vals_sorted[1])^(1/5) - 1, digits=4)*100</code>%). A distribuição etária estável mostra uma população jovem, com <code>{julia} round(porcentagem[1], digits=2)</code>% das mulheres na faixa de 0-4 anos, típica de países em transição demográfica. A verificação numérica da conjectura de Leslie confirmou que <span class="math inline">\(\lambda_1\)</span> é o único autovalor real positivo e de maior módulo, garantindo a convergência para a estrutura estável independentemente da condição inicial.</p>
 <div style="page-break-after: always;"></div>
 </section>
 <section id="referências" class="level1 unnumbered">
 <h1 class="unnumbered">Referências</h1>
 <div id="refs" class="references csl-bib-body" data-entry-spacing="1" role="list">
-<div id="ref-allman2004" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">ALLMAN, E. S.; RHODES, J. A. <strong>Mathematical models in biology: An introduction</strong>. Cambridge: Cambridge University Press, 2004. </div>
+<div id="ref-ID_AUTOR_ANO" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">SOBRENOME, N.; SOBRENOME, N. <strong>Título da Obra: subtítulo</strong>. Cidade: Editora, ANO. </div>
 </div>
-<div id="ref-usp_modelagem_2026" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[2] </div><div class="csl-right-inline">IFSC - INSTITUTO DE FÍSICA DE SÃO CARLOS. <strong>7600132 - Introdução à Modelagem Matemática em Biologia: A matriz de Leslie (parte 3)</strong>. São Carlos.Universidade de São Paulo, 2026. Disponível em: &lt;<a href="https://edisciplinas.usp.br/course/view.php?id=137935">https://edisciplinas.usp.br/course/view.php?id=137935</a>&gt;. Acesso em: 13 abr. 2026</div>
+<div id="ref-ID_INSTITUICAO_ANO" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">NOME DA INSTITUIÇÃO POR EXTENSO. <strong>Título do Documento ou Página</strong>. Entidade Mantenedora, ANOANO. Disponível em: &lt;<a href="https://URL_COMPLETA">URL_COMPLETA</a>&gt;</div>
+</div>
+<div id="ref-ID_VIDEO_ANO" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">NOME DO CANAL OU INSTITUIÇÃO. <strong>Título do Vídeo: subtítulo</strong>. YouTube/Plataforma, ANOANO. Disponível em: &lt;<a href="https://URL_DO_VIDEO">URL_DO_VIDEO</a>&gt;</div>
+</div>
+<div id="ref-ID_TABELA_ANO" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">INSTITUIÇÃO RESPONSÁVEL. <strong>Identificador: Nome da Tabela ou Conjunto de Dados</strong>. Cidade da SedeNome do Sistema/Banco de Dados, ANOANO. Disponível em: &lt;<a href="https://URL_DA_TABELA">URL_DA_TABELA</a>&gt;</div>
+</div>
+<div id="ref-ID_AVA_ANO" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[5] </div><div class="csl-right-inline">INSTITUIÇÃO/FACULDADE. <strong>Código - Nome da Disciplina: Tópico Específico</strong>. CidadeUniversidade, ANOANO. Disponível em: &lt;<a href="https://URL_DO_AVA">URL_DO_AVA</a>&gt;</div>
 </div>
 </div>
 <div style="page-break-after: always;"></div>

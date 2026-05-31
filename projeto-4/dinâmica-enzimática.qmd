@@ -1,0 +1,618 @@
+---
+lang: pt
+# bibliography: bib.bib
+csl: abnt-num.csl
+link-citations: true
+filters:
+  - code-appendix
+nocite: |
+  @*
+crossref:
+  fig-title: Figura
+  tbl-title: Tabela
+  fig-prefix: Fig.
+  eq-prefix: Eq.
+code-appendix-title: 'Apêndice: Códigos Fontes'
+code-appendix-header-level: 1
+format:
+  html:
+    toc: false
+    code-fold: true
+    format-links: false
+    code-overflow: wrap
+    fig-format: png
+  pdf:
+    toc: false
+    code-overflow: wrap
+    number-sections: true
+    keep-tex: false
+    echo: true
+    pdf-engine-opts: 
+      - "-shell-escape"
+    papersize: a4
+    fig-dpi: 300
+    classoption: [12pt, a4paper]
+    geometry:
+      - a4paper
+      - top=2cm
+      - left=2cm
+      - right=2cm
+      - bottom=2cm
+    fig-format: png
+    fig-cap-location: top
+    pdf-engine: lualatex
+    include-in-header:
+      text: |
+        % Adiciona pontos para seções (títulos de nível 1)
+        \KOMAoption{toc}{sectionentrywithdots}
+
+        \usepackage{tcolorbox}
+        \tcbuselibrary{skins}
+        \let\oldrule\rule
+        \renewcommand{\rule}[2]{\oldrule{\linewidth}{0.8pt}}
+
+        % Fonte Times New Roman
+        \usepackage{mathptmx}
+        \usepackage{indentfirst}
+
+        % Notas de rodapé: tamanho 10pt, entrelinha simples, posicionamento fixo no rodapé
+        \usepackage[bottom]{footmisc}
+        \renewcommand{\footnotesize}{\fontsize{10}{12}\selectfont}
+        \setlength{\footnotesep}{6pt}
+
+        % Tamanho da fonte das legendas
+        \usepackage{caption}
+        \captionsetup[figure]{font=footnotesize}   % está definido acima
+        \captionsetup[table]{font=footnotesize}
+
+        % Citações longas (>3 linhas): recuo 4cm, fonte 11pt, espaçamento simples
+        \renewenvironment{quote}
+          {\list{}{\rightmargin=0cm \leftmargin=4cm}\item\relax
+           \singlespacing\fontsize{11}{13}\selectfont}
+          {\endlist}
+
+        % Quebra de linha em blocos de código
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+        breaklines=true,
+        breakanywhere=true,
+        commandchars=\\\{\},
+        breaksymbol={},
+        breakautoindent=false
+        }
+
+        % Caracteres Unicode especiais
+        \usepackage{newunicodechar}
+        \newunicodechar{↩}{\ensuremath{\hookleftarrow}}
+        \newunicodechar{︎}{}
+
+        % Indentação no início dos parágrafos
+        \usepackage{indentfirst}
+
+        % Cabeçalho e rodapé, numeração no rodapé direito
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhf{} 
+        \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+        \renewcommand{\headrulewidth}{0pt}
+        \renewcommand{\headrulewidth}{0pt}
+        \fancypagestyle{plain}{
+          \fancyhf{}
+          \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+          \renewcommand{\headrulewidth}{0pt}
+          \renewcommand{\headrulewidth}{0pt}
+        }
+        % Remove marcações de seção no cabeçalho
+        \renewcommand{\sectionmark}[1]{}
+        \renewcommand{\subsectionmark}[1]{}
+        % Suprime o \maketitle no início do corpo do texto
+        \AtBeginDocument{\renewcommand{\maketitle}{}}
+
+        % Parágrafo: indentação de 1.2em, sem espaço extra entre parágrafos
+        \setlength{\parindent}{1.2em}
+        \setlength{\parskip}{0pt}
+
+        % Espaçamento 1,5 entre linhas (norma ABNT)
+        \usepackage{setspace} 
+        \onehalfspacing
+
+        % Redefine o ambiente quote para ser uma caixa cinza
+        \renewenvironment{quote}
+          {\begin{tcolorbox}[
+            enhanced,
+            colback=gray!10!white, 
+            colframe=gray!10!white,
+            colupper=gray!60!black,
+            arc=0pt, 
+            boxrule=0pt, 
+            left=15pt, 
+            right=10pt, 
+            top=5pt, 
+            bottom=5pt,
+            borderline west={3pt}{0pt}{gray!80!black}
+          ]}
+          {\end{tcolorbox}}
+engine: jupyter
+quarto_modo_escrita: false
+quarto_usar_local_fisico: false
+quarto_ignorar_ativos: false
+quarto_modo_rapido: false
+quarto_gerais: [bib.bib, abnt-num.csl, ifsc.jpg]
+quarto_extensoes: [glue, cl-roberts (modificada)]
+quarto_id: 26d77f23
+quarto_comp_nativa: false
+quarto_cache: false
+quarto_outputfile: true
+quarto_push_comp: true
+references:
+- id: Murray1993
+  title: 'Mathematical Biology'
+  author: [Murray, J. D.]
+  issued:
+    - year: 1989
+  publisher: Springer
+- id: IFSC2026
+  title: '7600132 - Introdução à Modelagem Matemática em Biologia: Dinâmica metabólica e estabilidade enzimática — parte 4'
+  author: [IFSC - Instituto de Física de São Carlos]
+  issued:
+    - year: 2026
+  publisher: 'Universidade de São Paulo'
+  address: 'São Carlos'
+  url: 'https://edisciplinas.usp.br/course/view.php?id=137935'
+  urldate: '2026-04-29'
+---
+
+```{julia}
+# @title: Código 1: Funções e variáveis globais
+# @label: Cálculo Geral
+using Plots, Plots.Measures, LinearAlgebra, DifferentialEquations, LaTeXStrings
+
+default(
+    guidefontsize = 30,
+    titlefontsize = 30,
+    tickfontsize = 30,
+    legendfontsize = 30,
+    linewidth = 1.5,
+    margin = 15mm
+)
+
+# Parâmetros fixos (conforme enunciado)
+const r, K, Vmax, Φ, d = 1.0, 1.0, 5.0, 0.5, 0.4
+
+# Sistema de EDOs
+function metabolismo!(du, u, p, t)
+    S, E = u; KM = p[1]
+    du[1] = r*S*(1 - S/K) - (Vmax*S*E)/(KM + S)
+    du[2] = E*( (Φ*S)/(KM + S) - d )
+end
+
+# Ponto fixo de coexistência (não trivial) – solução analítica
+function ponto_fixo(KM)
+    S_star = (d * KM) / (Φ - d)
+    E_star = (r * (1 - S_star/K) * (KM + S_star)) / Vmax
+    return S_star, E_star
+end
+
+# Matriz Jacobiana avaliada em (S, E)
+function jacobiana(S, E, KM)
+    J11 = r*(1 - 2*S/K) - (Vmax*E*KM)/((KM + S)^2)
+    J12 = -(Vmax*S)/(KM + S)
+    J21 = (Φ*E*KM)/((KM + S)^2)
+    J22 = (Φ*S)/(KM + S) - d
+    return [J11 J12; J21 J22]
+end
+
+# Valor crítico de K_M obtido da condição Tr(J)=0 (derivado analiticamente)
+KM_crit_val = (Φ - d) / (Φ + d)  # expressão corrigida
+nothing
+```
+
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[height=2.2cm]{ifsc.jpg}\hspace{0.3cm} \\
+        \large \textbf{UNIVERSIDADE DE SÃO PAULO} \\
+        \large \textbf{INSTITUTO DE FÍSICA DE SÃO CARLOS} \\
+        \large \textbf{BACHARELADO EM FÍSICA BIOMOLECULAR} \\
+    \vfill 
+    \vspace{2cm}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+    \vfill 
+        \large \textbf{INTRODUÇÃO À MODELAGEM MATEMÁTICA EM BIOLOGIA} \\
+    \vspace{0.5cm}
+        {\large \textbf{DINÂMICA METABÓLICA E ESTABILIDADE ENZIMÁTICA — PROJETO 4}} \\
+    \vfill
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\begin{titlepage}
+    \begin{center}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+        \vfill
+        \Large \textbf{DINÂMICA METABÓLICA E ESTABILIDADE ENZIMÁTICA — PROJETO 4} \\
+        \vfill
+    \end{center}
+    \hspace{.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+        \begin{singlespace}
+            \small
+            Relatório técnico apresentado à disciplina de Introdução à Modelagem Matemática em Biologia do Instituto de Física de São Carlos — USP, como requisito parcial para avaliação.
+        \end{singlespace}
+        \begin{singlespace}
+            \textbf{Orientador:} Jose Fernando Fontanari
+        \end{singlespace}
+    \end{minipage}
+    \vfill
+    \begin{center}
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\hypersetup{linkcolor=black}
+\tableofcontents
+
+\newpage
+\hypersetup{linkcolor=blue}
+\twocolumn
+
+# Introdução
+
+A modelagem matemática de sistemas biológicos frequentemente recorre a sistemas de equações diferenciais ordinárias para descrever a evolução temporal de concentrações de substâncias ou densidades populacionais. Um dos paradigmas mais estudados nesse contexto é o acoplamento entre um processo de crescimento autocatalítico (também chamado de crescimento logístico) e uma reação de consumo mediada por uma enzima que obedece à cinética de Michaelis‑Menten. Esse tipo de modelo aparece, por exemplo, na descrição de vias metabólicas onde um substrato é produzido por um mecanismo que depende da própria concentração do substrato (autocatálise) e é simultaneamente consumido por uma enzima cuja atividade se satura em altas concentrações do substrato.
+
+Segundo a exposição de Murray (1993), para um sistema de duas variáveis da forma
+$$
+\frac{du}{dt}=f(u,v),\qquad \frac{dv}{dt}=g(u,v),
+$$
+
+\noindent a análise da estabilidade de um ponto de equilíbrio $(u_0,v_0)$ é feita por meio da linearização em torno desse ponto, obtendo‑se a matriz jacobiana
+$$
+A = \begin{pmatrix}
+f_u & f_v\\
+g_u & g_v
+\end{pmatrix}_{(u_0,v_0)}
+$$
+
+Os autovalores $\lambda$ de $A$ determinam o comportamento local: se ambos têm parte real negativa, o equilíbrio é estável (homeostase); se pelo menos um tem parte real positiva, o equilíbrio é instável. Quando o traço da matriz é nulo ($\operatorname{tr}A=0$) e o determinante é positivo ($\det A>0$), ocorre uma bifurcação de Hopf, dando origem a um ciclo limite – uma órbita fechada isolada no plano de fase que corresponde a oscilações periódicas sustentadas das concentrações.
+
+O presente relatório aplica essa teoria a um modelo de via metabólica no qual um substrato $S(t)$ cresce logisticamente e é consumido por uma enzima $E(t)$ segundo a lei de Michaelis‑Menten. A produção da enzima é estimulada pelo substrato, e a enzima sofre degradação linear. O sistema é escrito como
+$$
+\begin{aligned}
+\frac{dS}{dt} &= rS\left(1 - \frac{S}{K}\right) - \frac{V_{\text{max}} S E}{K_M + S},
+\\[8pt]
+\frac{dE}{dt} &= E\left(\frac{\Phi S}{K_M + S} - d\right),
+\end{aligned}
+$$
+
+\noindent com os parâmetros fixos $r=1$, $K=1$, $V_{\text{max}}=5$, $\Phi=0,5$ e $d=0,4$. A constante de Michaelis‑Menten $K_M$ é o parâmetro de controle: valores pequenos indicam alta afinidade entre enzima e substrato, enquanto valores grandes indicam baixa afinidade. O objetivo é investigar como a variação de $K_M$ influencia a estabilidade do ponto fixo não trivial (coexistência) e determinar o limiar de transição entre um regime estacionário e um regime oscilatório.
+
+# Desenvolvimento
+
+## Simulação Numérica e Retrato de Fase
+
+Foram simuladas duas situações representativas: $K_M = 0,5$ (baixa afinidade) e $K_M = 0,1$ (alta afinidade). As trajetórias no plano de fase $(S,E)$ foram obtidas resolvendo numericamente as equações com o método de Tsitouras, partindo de condições iniciais adequadas.
+
+### Caso A: $K_M = 0,5$ (baixa afinidade)
+
+Para $K_M = 0,5$, a solução analítica do ponto fixo de coexistência fornece $S^* = d K_M/(\Phi-d) = (0,4 \times 0,5)/(0,1) = 2,0$, que ultrapassa a capacidade de carga $K=1$, implicando $E^*$ negativo. Portanto, o equilíbrio de coexistência é fisicamente inviável. A dinâmica converge para o equilíbrio de fronteira $(S=1, E=0)$, onde a enzima se extingue e o substrato atinge sua capacidade máxima. A Figura 1 mostra a trajetória que se aproxima desse ponto de forma monotônica (não oscilatória).
+
+```{julia}
+#| label: fig-casoa
+#| fig-cap: 'Plano de fase para $K_M = 0,5$'
+# @label: fig:casoa
+# @title: Código 2: Simulação para K_M = 0,5
+# @caption: Resolução numérica do sistema de EDOs com K_M = 0,5, partindo de condições iniciais próximas à origem. A trajetória converge de forma monotônica para o equilíbrio de fronteira (S=1, E=0), indicando extinção da enzima e ausência de ritmicidade.
+# @backlink: ↩ Voltar para a figura A
+KM_A = 0.5
+prob_A = ODEProblem(metabolismo!, [0.1, 0.1], (0.0, 150.0), [KM_A])
+sol_A = solve(prob_A, Tsit5())
+plot(sol_A, idxs=(1,2), c = :bluesreds, xlabel="S", ylabel="E", label="Trajetória")
+```
+
+\begin{center}
+\footnotesize
+\noindent A trajetória converge de forma monotônica para o equilíbrio de fronteira $(S=1, E=0)$, indicando extinção da enzima e ausência de ritmicidade. \hyperlink{code-casoa}{[Código]}
+\end{center}
+
+### Caso B: $K_M = 0,1$ (alta afinidade)
+
+```{julia}
+#| label: fig-casob
+#| fig-cap: 'Plano de fase para $K_M = 0,1$'
+# @label: fig:casob
+# @title: Código 3: Simulação para K_M = 0,1
+# @caption: Resolução numérica do sistema de EDOs com K_M = 0,1, partindo de uma condição inicial próxima ao ponto fixo de coexistência. A trajetória espiral para fora e converge para um ciclo limite estável, caracterizando oscilações sustentadas (ritmicidade)
+# @backlink: ↩ Voltar para a figura B
+KM_B = 0.1
+S_B, E_B = ponto_fixo(KM_B)
+prob_B = ODEProblem(metabolismo!, [S_B + 0.03, E_B + 0.05], (0.0, 400.0), [KM_B])
+sol_B = solve(prob_B, Tsit5(), saveat=0.1)
+# Extraia os dados da solução para vetores simples
+S_vals = [u[1] for u in sol_B.u]
+E_vals = [u[2] for u in sol_B.u]
+t_vals = sol_B.t
+plot(S_vals, E_vals, line_z = t_vals, c = :coolwarm, xlabel="S", ylabel="E", label="Trajetória")
+# Adição do Ponto Fixo (coexistência)
+scatter!([S_B], [E_B], 
+         color = :red, 
+         markersize = 6, 
+         label = "Ponto Fixo (Instável)",
+         markershape = :circle)
+```
+
+\begin{center}
+\footnotesize
+\noindent A trajetória espiral parte do ponto fixo instável e converge para o ciclo limite (oscilações sustentadas), como demonstra a trajetória e seu gradiente de existência. \hyperlink{code-casob}{[Código]}
+\end{center}
+
+Com $K_M = 0,1$, o ponto fixo de coexistência torna‑se positivo e é dado pelas expressões analíticas:
+$$
+S^* = \frac{d K_M}{\Phi - d} = \frac{0,4 \times 0,1}{0,1} = 0,4, \qquad
+$$
+$$
+E^* = \frac{r\left(1 - S^*/K\right)(K_M+S^*)}{V_{\text{max}}}
+=
+$$
+$$
+\frac{(1 - 0,4)(0,1 + 0,4)}{5} = \frac{0,6 \times 0,5}{5} = 0,06.
+$$
+Portanto, o ponto de coexistência é $(0,4;\;0,06)$. A linearização em torno desse ponto revela autovalores complexos com parte real positiva (foco instável). Partindo de uma condição inicial próxima ao ponto fixo, a trajetória espiral para fora até alcançar uma órbita fechada estável – um ciclo limite (ver Figura 2). Esse comportamento periódico sustentado caracteriza a emergência de ritmicidade na via metabólica.
+
+### Existência de Ciclo Limite e Significado para o Fluxo Metabólico
+
+O sistema no Caso B apresenta um ciclo limite. Um ciclo limite é uma órbita fechada e isolada no plano de fase para a qual todas as trajetórias suficientemente próximas convergem (ciclo limite estável). Sua existência está garantida pelo teorema de Poincaré‑Bendixson, uma vez que: (i) o ponto fixo de coexistência é um foco instável (autovalores com parte real positiva); (ii) o sistema é dissipativo e existe uma região do plano de fase (um conjunto limitante) que não contém outros pontos fixos – as próprias simulações mostram que a trajetória não explode para infinito, mas sim se enrola em uma órbita fechada.
+
+A presença de um ciclo limite implica que a via metabólica não atinge um estado estacionário constante. Em vez disso, as concentrações de substrato e enzima oscilam periodicamente de forma autossustentada. Isso significa que o fluxo metabólico (taxa de conversão de substrato em produto, ou a atividade enzimática) varia ciclicamente no tempo.
+
+Do ponto de vista fisiológico, o ciclo limite permite que a célula module sua atividade metabólica de forma coordenada no tempo, alternando entre fases de alta e baixa produção/consumo, o que é fundamental para processos como a divisão celular, a resposta a estímulos e a sincronização com o ambiente.
+
+## Análise de Estabilidade Local
+
+### Ponto fixo de coexistência
+
+O ponto fixo não trivial $(S^*,E^*)$ é obtido igualando as derivadas temporais a zero. Da segunda equação do sistema obtém‑se imediatamente:
+$$
+S^* = \frac{d K_M}{\Phi - d} = 2,5\,K_M,
+$$
+
+\noindent com os valores numéricos adotados ($\Phi=0,5$, $d=0,4$). Substituindo na primeira equação resulta:
+$$
+E^* = \frac{r\left(1 - S^*/K\right)(K_M+S^*)}{V_{\text{max}}}.
+$$
+
+### Matriz Jacobiana e equação característica
+
+A obtenção da matriz Jacobiana segue o procedimento padrão para sistemas bidimensionais. Seja o sistema escrito na forma vetorial:
+$$
+\frac{d}{dt}\begin{pmatrix} S \\ E \end{pmatrix}
+$$
+$$
+= \begin{pmatrix} f(S,E) \\ g(S,E) \end{pmatrix},
+$$
+
+\noindent onde
+$$
+f(S,E) = rS\!\left(1-\frac{S}{K}\right) - \frac{V_{\text{max}} S E}{K_M+S},
+$$
+$$
+g(S,E) = E\!\left(\frac{\Phi S}{K_M+S} - d\right).
+$$
+
+---
+
+\noindent A matriz Jacobiana é definida como:
+$$
+J = \begin{pmatrix}
+\dfrac{\partial f}{\partial S} & \dfrac{\partial f}{\partial E} \\[6pt]
+\dfrac{\partial g}{\partial S} & \dfrac{\partial g}{\partial E}
+\end{pmatrix}.
+$$
+
+\noindent Calculam‑se as derivadas parciais:
+
+$$\displaystyle \frac{\partial f}{\partial S} = r\!\left(1-\frac{2S}{K}\right) - \frac{V_{\text{max}} E K_M}{(K_M+S)^2},$$
+
+$$\displaystyle \frac{\partial f}{\partial E} = -\frac{V_{\text{max}} S}{K_M+S},$$
+
+$$\displaystyle \frac{\partial g}{\partial S} = E \cdot \frac{\Phi K_M}{(K_M+S)^2},$$
+
+$$\displaystyle \frac{\partial g}{\partial E} = \frac{\Phi S}{K_M+S} - d.$$
+
+\noindent Logo, a matriz Jacobiana completa, $J(S,E,K_M),$ é:
+$$
+\begin{bmatrix}
+r\left(1 - \dfrac{2S}{K}\right) - \dfrac{V_{\text{max}} E K_M}{(K_M+S)^2} & -\dfrac{V_{\text{max}} S}{K_M+S} \\[12pt]
+\dfrac{\Phi E K_M}{(K_M+S)^2} & \dfrac{\Phi S}{K_M+S} - d
+\end{bmatrix}.
+$$
+
+No ponto fixo de coexistência, a condição $g=0$ implica $\dfrac{\Phi S^*}{K_M+S^*} = d$, de modo que o elemento $J_{22}$ se anula, simplificando a matriz para a forma apresentada na análise de estabilidade.
+
+### Análise de Autovalores
+
+#### Caso A ($K_M = 0,5$)
+
+Neste caso, o ponto fixo de coexistência é inviável ($S^* > K$, $E^* < 0$). O único equilíbrio relevante é o de fronteira $(S=1, E=0)$. A Jacobiana, $J(1,0,K_M)$, neste ponto é
+$$
+\begin{bmatrix}
+r(1 - 2/K) & -\dfrac{V_{\text{max}}}{K_M+1} \\[4pt]
+0 & \dfrac{\Phi S}{K_M+S} - d
+\end{bmatrix} =
+$$
+$$
+\begin{bmatrix}
+-1 & -\dfrac{5}{1,5} \\[4pt]
+0 & \dfrac{0,5\cdot1}{0,5+1} - 0,4
+\end{bmatrix}
+=
+$$
+$$
+\begin{bmatrix}
+-1 & -10/3 \\[4pt]
+0 & \dfrac{1}{3} - \dfrac{2}{5}
+\end{bmatrix}
+=
+\begin{bmatrix}
+-1 & -10/3 \\[4pt]
+0 & -\dfrac{1}{15}
+\end{bmatrix}.
+$$
+
+Os autovalores são $\lambda_1 = -1$ e $\lambda_2 = -1/15$, ambos reais e negativos. Portanto, o ponto de fronteira é um **nó estável** estrito, sem qualquer degenerescência. A trajetória se aproxima do ponto $(1,0)$ de forma monotônica, sem oscilações, conforme observado na Figura 1.
+
+#### Caso B ($K_M = 0,1$)
+
+Neste caso, o ponto fixo de coexistência é $(S^*,E^*) = (0,4;\;0,06)$. A Jacobiana avaliada nesse ponto é obtida substituindo os valores na expressão geral (lembrando que $J_{22}=0$ no ponto fixo):
+$$
+J(0,4;\,0,06;\,0,1) =
+$$
+$$
+\begin{bmatrix}
+1\left(1 - \frac{0,8}{1}\right) - \frac{5 \times 0,06 \times 0,1}{(0,1+0,4)^2} & -\frac{5 \times 0,4}{0,1+0,4} \\[6pt]
+\frac{0,5 \times 0,06 \times 0,1}{(0,1+0,4)^2} & 0
+\end{bmatrix}
+=
+$$
+$$
+\begin{bmatrix}
+0,2 - \frac{0,03}{0,25} & -\frac{2}{0,5} \\[6pt]
+\frac{0,003}{0,25} & 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+0,08 & -4 \\[6pt]
+0,012 & 0
+\end{bmatrix}.
+$$
+
+A equação característica $\det(J - \lambda I)=0$ fornece $\lambda^2 - 0,08\lambda + 0,048 = 0$. O discriminante é $\Delta = 0,0064 - 0,192 = -0,1856$, negativo, resultando em autovalores complexos conjugados: $\lambda = 0,04 \pm i\,0,2154$. A parte real é positiva ($\operatorname{Re}(\lambda)=0,04 > 0$), e a parte imaginária é não nula.
+
+> Obs: a parte imaginária $\omega$ corresponde à frequência natural das oscilações lineares, e o período é dado por $T = 2\pi/\omega$.
+
+No que se refere às duas simulações apresentadas nos itens (2.1.*), a relação entre a parte real dos autovalores e o comportamento observado é direta.
+
+Para $K_M = 0,5$ (Caso A), o ponto fixo de fronteira tem autovalores reais negativos, assegurando que a trajetória se aproxime do equilíbrio de maneira monotônica, sem oscilações, exatamente como mostrado na Figura 1.
+
+Já para $K_M = 0,1$ (Caso B), os autovalores do ponto fixo de coexistência são complexos com parte real positiva. A parte real positiva implica que pequenas perturbações em torno desse ponto crescem exponencialmente, gerando uma trajetória espiral divergente – o que se observa na Figura 2, onde a curva se afasta do ponto fixo até alcançar o ciclo limite. A parte imaginária não nula confere o caráter oscilatório (espiral) à trajetória, coerente com as voltas visíveis no retrato de fase.
+
+Consequentemente, o ponto fixo de coexistência classifica‑se como um **foco instável** (autovalores complexos conjugados com parte real positiva), enquanto o ponto de fronteira se comporta como um **nó estável** (autovalores reais negativos).
+
+## Determinação do Limite de Estabilidade
+
+A transição entre os dois regimes ocorre quando o ponto fixo de coexistência perde a estabilidade. Para sistemas bidimensionais, essa transição está associada ao anulamento do traço da matriz Jacobiana, mantido o determinante positivo. De fato, a equação característica $\lambda^2 - \tau \lambda + \Delta = 0$ tem raízes com parte real negativa se, e somente se, $\tau < 0$ e $\Delta > 0$. Quando $\tau$ se torna positivo, pelo menos um autovalor adquire parte real positiva, desestabilizando o ponto fixo. O limiar $\tau = 0$ é, portanto, a fronteira de estabilidade, configurando uma **bifurcação de Hopf** (desde que $\Delta > 0$).
+
+Aplicando a condição $\tau = 0$ ao ponto fixo de coexistência, obtém‑se, após simplificação algébrica (ver Apêndice A para os detalhes), a expressão analítica para o valor crítico da constante de Michaelis‑Menten:
+
+$$
+K_M^{\text{crit}} = \frac{\Phi - d}{\Phi + d}.
+$$
+
+Com os parâmetros adotados $\Phi = 0,5$ e $d = 0,4$, resulta:
+
+$$
+K_M^{\text{crit}} = \frac{0,5 - 0,4}{0,5 + 0,4} = \frac{0,1}{0,9} = \frac{1}{9}.
+$$
+
+Assim, para $K_M > 1/9$ (exemplo: $0,5$) o ponto fixo de coexistência é estável ou inexistente, enquanto para $K_M < 1/9$ (exemplo: $0,1$) ele se torna instável, dando lugar a oscilações periódicas sustentadas – exatamente o que as simulações numéricas confirmam.
+
+### Equação característica em termos do traço e do determinante
+
+Para uma matriz $2\times 2$ genérica $J = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, a equação característica é
+$$
+\det(J - \lambda I) = \begin{vmatrix} a-\lambda & b \\ c & d-\lambda \end{vmatrix} = 
+$$
+$$
+(a-\lambda)(d-\lambda) - bc =
+$$
+$$
+\lambda^2 - (a+d)\lambda + (ad - bc) = 0.
+$$
+
+\noindent Definindo o traço $\tau = a+d = \operatorname{tr}(J)$ e o determinante $\Delta = ad - bc = \det(J)$, a equação torna‑se
+$$
+\lambda^2 - \tau \lambda + \Delta = 0
+$$
+
+\noindent As raízes são $\lambda = \frac{\tau \pm \sqrt{\tau^2 - 4\Delta}}{2}$.
+
+### Condição para a fronteira de estabilidade
+
+A estabilidade do ponto fixo requer que ambas as raízes tenham parte real negativa. Para uma equação quadrática com coeficientes reais, isso ocorre se, e somente se: $\tau < 0$ (a soma das raízes é negativa); $\Delta > 0$ (o produto das raízes é positivo, garantindo que não haja raízes reais de sinais opostos ou raízes complexas com parte real nula).
+
+Se $\Delta > 0$, as raízes são ambas reais com o mesmo sinal (quando $\tau^2 \geq 4\Delta$) ou complexas conjugadas com parte real $\tau/2$ (quando $\tau^2 < 4\Delta$). Em qualquer caso, o sinal da parte real é o sinal de $\tau$. Portanto, quando $\Delta > 0$, a estabilidade é determinada exclusivamente pelo traço:
+
+$$\tau < 0 \rightarrow \text{ ponto fixo estável;}$$
+$$\tau = 0 \rightarrow \text{ ponto fixo neutro;}$$
+$$\tau > 0 \rightarrow \text{ ponto fixo instável.}$$
+
+\noindent Assim, a condição $\tau = 0$ (traço nulo) marca a fronteira de estabilidade (bifurcação de Hopf) para sistemas bidimensionais com $\Delta > 0$.
+
+### Cálculo do valor crítico de $K_M$ (detalhamento algébrico)
+
+Partindo da condição $\tau = 0$ no ponto fixo de coexistência, e utilizando as expressões de $S^*$ e $E^*$ já deduzidas, obtém‑se:
+$$
+\tau = r\left(1 - \frac{2S^*}{K}\right) - \frac{V_{\text{max}}E^*K_M}{(K_M+S^*)^2} = 0.
+$$
+
+\noindent Substituindo $E^* = \frac{r(1 - S^*/K)(K_M+S^*)}{V_{\text{max}}}$ e $K=1$, tem‑se:
+$$
+r(1 - 2S^*) - \frac{V_{\text{max}} \cdot \frac{r(1 - S^*)(K_M+S^*)}{V_{\text{max}}} \cdot K_M}{(K_M+S^*)^2} =
+$$
+$$
+r(1 - 2S^*) - \frac{r(1 - S^*)K_M}{K_M+S^*} = 0.
+$$
+
+\noindent Cancelando $r$ (suposto não nulo) e multiplicando por $(K_M+S^*)$:
+$$
+(1 - 2S^*)(K_M+S^*) - (1 - S^*)K_M = 0.
+$$
+
+\noindent Expandindo:
+$$
+(K_M+S^*) - 2S^*(K_M+S^*) - K_M + S^*K_M =
+$$
+$$
+S^* - 2S^*K_M - 2S^{*2} + S^*K_M =
+$$
+$$
+S^* - S^*K_M - 2S^{*2} =
+$$
+$$
+S^*(1 - K_M - 2S^*) = 0.
+$$
+
+\noindent Como $S^*>0$, tem‑se $1 - K_M - 2S^* = 0$, ou seja, $2S^* = 1 - K_M$. Utilizando a expressão de $S^*$ em função de $K_M$ e dos parâmetros ($S^* = \frac{d K_M}{\Phi - d}$) e substituindo $d=0,4$, $\Phi=0,5$, $K=1$:
+$$
+2 \cdot \frac{d K_M}{\Phi - d} = 1 - K_M \quad\Longrightarrow\quad
+\frac{0,8 K_M}{0,1} = 1 - K_M
+$$
+$$
+\quad\Longrightarrow\quad
+8 K_M = 1 - K_M \quad\Longrightarrow\quad 9 K_M = 1,
+$$
+ou seja, $K_M = 1/9$. Este resultado confirma numericamente o valor obtido pela expressão geral $K_M^{\text{crit}} = (\Phi - d)/(\Phi + d)$.
+
+### Verificação dos valores $0,1$ e $0,5$
+
+Para $K_M = 0,5$ ($> K_M^{\text{crit}}$), calculamos $\tau$ numericamente. No ponto fixo de coexistência (que é inviável, mas se considerarmos apenas a expressão algébrica) teríamos $\tau < 0$. Na prática, o sistema converge para o equilíbrio de fronteira estável, consistente com um regime de homeostase (embora com a enzima extinta).  
+Para $K_M = 0,1$ ($< K_M^{\text{crit}}$), o ponto fixo de coexistência é viável e, como vimos, $\tau \approx 0,08 > 0$, gerando um foco instável e o subsequente ciclo limite (ritmicidade).
+
+Os valores $0,5$ e $0,1$ estão, portanto, em lados opostos da fronteira de estabilidade: $0,5 > K_M^{\text{crit}}$ e $0,1 < K_M^{\text{crit}}$. Essa separação é responsável pelos comportamentos dinâmicos radicalmente diferentes observados nas simulações.
+
+# Conclusão
+
+Os resultados mostram que a constante de Michaelis‑Menten ($K_M$) controla a transição entre homeostase (ponto fixo estável) e ritmicidade (ciclo limite), com valor crítico $K_M^{\text{crit}}=1/9$. Quando a afinidade da enzima aumenta excessivamente ($K_M$ muito baixo), a via metabólica perde a estabilidade estacionária e passa a oscilar periodicamente, pois o ponto fixo torna‑se um foco instável. Uma enzima de alta afinidade satura rapidamente mesmo com pouco substrato, criando um efeito de “liga‑desliga” que, acoplado à produção autocatalítica, gera oscilações sustentadas – um ciclo limite.
+
+No corpo humano, esse fenômeno é essencial para a homeostase dinâmica: hormônios como insulina são secretados em pulsos (oscilações), ritmos circadianos dependem de ciclos de proteínas, e a sinalização por cálcio utiliza picos periódicos. A alta afinidade enzimática não impede a homeostase; ao contrário, ela permite uma regulação temporal mais robusta e resiliente.
+
+Em resumo, o modelo mostra que parâmetros cinéticos simples determinam se uma via metabólica opera em estado constante ou em ritmos biológicos, com aplicações diretas no entendimento de processos como glicólise, relógio biológico e controle hormonal.
+
+# Referências {.unnumbered}
+
+::: {#refs}
+:::
+
+\onecolumn

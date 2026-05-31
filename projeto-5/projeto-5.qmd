@@ -1,0 +1,353 @@
+---
+lang: pt
+# bibliography: bib.bib
+csl: abnt-num.csl
+link-citations: true
+filters:
+  - code-appendix
+nocite: |
+  @*
+crossref:
+  fig-title: Figura
+  tbl-title: Tabela
+  fig-prefix: Fig.
+  eq-prefix: Eq.
+code-appendix-title: 'Apêndice: Códigos Fontes'
+code-appendix-header-level: 1
+format:
+  html:
+    toc: false
+    code-fold: true
+    format-links: false
+    code-overflow: wrap
+    fig-format: png
+  pdf:
+    toc: false
+    code-overflow: wrap
+    number-sections: true
+    keep-tex: false
+    echo: true
+    pdf-engine-opts: 
+      - "-shell-escape"
+    papersize: a4
+    fig-dpi: 300
+    classoption: [12pt, a4paper]
+    geometry:
+      - a4paper
+      - top=2cm
+      - left=2cm
+      - right=2cm
+      - bottom=2cm
+    fig-format: png
+    fig-cap-location: top
+    pdf-engine: lualatex
+    include-in-header:
+      text: |
+        % Adiciona pontos para seções (títulos de nível 1)
+        \KOMAoption{toc}{sectionentrywithdots}
+
+        \usepackage{tcolorbox}
+        \tcbuselibrary{skins}
+        \let\oldrule\rule
+        \renewcommand{\rule}[2]{\oldrule{\linewidth}{0.8pt}}
+
+        % Fonte Times New Roman
+        \usepackage{mathptmx}
+        \usepackage{indentfirst}
+
+        % Notas de rodapé: tamanho 10pt, entrelinha simples, posicionamento fixo no rodapé
+        \usepackage[bottom]{footmisc}
+        \renewcommand{\footnotesize}{\fontsize{10}{12}\selectfont}
+        \setlength{\footnotesep}{6pt}
+
+        % Tamanho da fonte das legendas
+        \usepackage{caption}
+        \captionsetup[figure]{font=footnotesize}   % está definido acima
+        \captionsetup[table]{font=footnotesize}
+
+        % Citações longas (>3 linhas): recuo 4cm, fonte 11pt, espaçamento simples
+        \renewenvironment{quote}
+          {\list{}{\rightmargin=0cm \leftmargin=4cm}\item\relax
+           \singlespacing\fontsize{11}{13}\selectfont}
+          {\endlist}
+
+        % Quebra de linha em blocos de código
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+        breaklines=true,
+        breakanywhere=true,
+        commandchars=\\\{\},
+        breaksymbol={},
+        breakautoindent=false
+        }
+
+        % Caracteres Unicode especiais
+        \usepackage{newunicodechar}
+        \newunicodechar{↩}{\ensuremath{\hookleftarrow}}
+        \newunicodechar{︎}{}
+
+        % Indentação no início dos parágrafos
+        \usepackage{indentfirst}
+
+        % Cabeçalho e rodapé, numeração no rodapé direito
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhf{} 
+        \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+        \renewcommand{\headrulewidth}{0pt}
+        \renewcommand{\headrulewidth}{0pt}
+        \fancypagestyle{plain}{
+          \fancyhf{}
+          \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+          \renewcommand{\headrulewidth}{0pt}
+          \renewcommand{\headrulewidth}{0pt}
+        }
+        % Remove marcações de seção no cabeçalho
+        \renewcommand{\sectionmark}[1]{}
+        \renewcommand{\subsectionmark}[1]{}
+        % Suprime o \maketitle no início do corpo do texto
+        \AtBeginDocument{\renewcommand{\maketitle}{}}
+
+        % Parágrafo: indentação de 1.2em, sem espaço extra entre parágrafos
+        \setlength{\parindent}{1.2em}
+        \setlength{\parskip}{0pt}
+
+        % Espaçamento 1,5 entre linhas (norma ABNT)
+        \usepackage{setspace} 
+        \onehalfspacing
+
+        % Redefine o ambiente quote para ser uma caixa cinza
+        \renewenvironment{quote}
+          {\begin{tcolorbox}[
+            enhanced,
+            colback=gray!10!white, 
+            colframe=gray!10!white,
+            colupper=gray!60!black,
+            arc=0pt, 
+            boxrule=0pt, 
+            left=15pt, 
+            right=10pt, 
+            top=5pt, 
+            bottom=5pt,
+            borderline west={3pt}{0pt}{gray!80!black}
+          ]}
+          {\end{tcolorbox}}
+engine: jupyter
+quarto_modo_escrita: false
+quarto_usar_local_fisico: false
+quarto_ignorar_ativos: false
+quarto_modo_rapido: false
+quarto_gerais: [abnt-num.csl, ifsc.jpg, bib.bib]
+quarto_extensoes: [cl-roberts (modificada), glue]
+quarto_id: 8372d642
+quarto_comp_nativa: false
+quarto_cache: false
+quarto_outputfile: true
+quarto_push_comp: true
+references:
+- id: Murray1993
+  title: 'Mathematical Biology'
+  author: [Murray, J. D.]
+  issued:
+    - year: 1989
+  publisher: Springer
+- id: IFSC2026
+  title: '7600132 - Introdução à Modelagem Matemática em Biologia: Dinâmica metabólica e estabilidade enzimática — parte 4'
+  author: [IFSC - Instituto de Física de São Carlos]
+  issued:
+    - year: 2026
+  publisher: 'Universidade de São Paulo'
+  address: 'São Carlos'
+  url: 'https://edisciplinas.usp.br/course/view.php?id=137935'
+  urldate: '2026-04-29'
+---
+
+```{julia}
+# @title: Código 1: Funções e variáveis globais
+# @label: Cálculo Geral
+using Plots, Plots.Measures, LinearAlgebra, DifferentialEquations, LaTeXStrings, Roots
+
+default(
+    guidefontsize = 30,
+    titlefontsize = 30,
+    tickfontsize = 30,
+    legendfontsize = 30,
+    linewidth = 1.5,
+    margin = 15mm
+)
+
+# Parâmetros e funções serão definidos nos blocos específicos
+nothing
+```
+
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[height=2.2cm]{ifsc.jpg}\hspace{0.3cm} \\
+        \large \textbf{UNIVERSIDADE DE SÃO PAULO} \\
+        \large \textbf{INSTITUTO DE FÍSICA DE SÃO CARLOS} \\
+        \large \textbf{BACHARELADO EM FÍSICA BIOMOLECULAR} \\
+    \vfill 
+    \vspace{2cm}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+    \vfill 
+        \large \textbf{INTRODUÇÃO À MODELAGEM MATEMÁTICA EM BIOLOGIA} \\
+    \vspace{0.5cm}
+        {\large \textbf{MODELO SIR DE EPIDEMIAS — PROJETO 5}} \\
+    \vfill
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\begin{titlepage}
+    \begin{center}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+        \vfill
+        \Large \textbf{MODELO SIR DE EPIDEMIAS — PROJETO 5} \\
+        \vfill
+    \end{center}
+    \hspace{.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+        \begin{singlespace}
+            \small
+            Relatório técnico apresentado à disciplina de Introdução à Modelagem Matemática em Biologia do Instituto de Física de São Carlos — USP, como requisito parcial para avaliação.
+        \end{singlespace}
+        \begin{singlespace}
+            \textbf{Orientador:} Jose Fernando Fontanari
+        \end{singlespace}
+    \end{minipage}
+    \vfill
+    \begin{center}
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\hypersetup{linkcolor=black}
+\tableofcontents
+
+\newpage
+\hypersetup{linkcolor=blue}
+\twocolumn
+
+# Introdução
+
+O modelo Suscetível–Infectado–Removido, SIR, proposto por Kermack e McKendrick, constitui um dos paradigmas fundamentais da epidemiologia matemática. Ele descreve a evolução temporal de uma doença diretamente transmissível em uma população de tamanho constante $N$, dividida em três variáveis: $S(t)$ – indivíduos suscetíveis, $I(t)$ – infectados contagiosos e $R(t)$ – removidos (recuperados com imunidade permanente ou mortos). Duas perguntas centrais orientam o estudo: por que uma epidemia começa? por que ela termina mesmo quando ainda restam suscetíveis? Utilizando análise de estabilidade local e o conceito de número reprodutivo básico $\mathcal{R}_0$, aliados à equação transcendental que determina a fração final de suscetíveis, este relatório responde a essas questões, seguindo a exposição de Murray (1993).
+
+
+# Desenvolvimento
+
+## Parte 1 – O Início da Epidemia: Estabilidade Local e a Jacobiana
+
+O sistema de equações diferenciais do modelo SIR, desconsiderando a equação para $R(t)$ uma vez que $R = N - S - I$, é dado por:
+
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\alpha S I, \\[6pt]
+\frac{dI}{dt} &= \alpha S I - \gamma I,
+\end{aligned}
+$$
+
+onde $\alpha > 0$ é a taxa de transmissão (contatos infectantes por unidade de tempo) e $\gamma > 0$ é a taxa de remoção (recuperação ou morte). O tempo médio de infecção é $1/\gamma$. O número reprodutivo básico é definido como $\mathcal{R}_0 = \alpha S(0)/\gamma$, representando o número médio de infecções secundárias geradas por um infectante em uma população totalmente suscetível.
+
+### Matriz Jacobiana
+
+Calculando as derivadas parciais:
+
+$$
+\frac{\partial}{\partial S}\left(-\alpha S I\right) = -\alpha I, \quad
+\frac{\partial}{\partial I}\left(-\alpha S I\right) = -\alpha S,
+$$
+$$
+\frac{\partial}{\partial S}\left(\alpha S I - \gamma I\right) = \alpha I, \quad
+\frac{\partial}{\partial I}\left(\alpha S I - \gamma I\right) = \alpha S - \gamma.
+$$
+
+Portanto, a matriz Jacobiana do sistema é:
+
+$$
+J(S,I) = \begin{bmatrix}
+-\alpha I & -\alpha S \\
+\alpha I & \alpha S - \gamma
+\end{bmatrix}.
+$$
+
+### Avaliação no equilíbrio pré‑epidêmico
+
+O estado inicial de interesse é aquele em que toda a população é suscetível e não há infectados: $(S(0), I(0)) = (S_0, 0)$. Substituindo na Jacobiana obtém‑se:
+
+$$
+J(S_0,0) = \begin{bmatrix}
+0 & -\alpha S_0 \\
+0 & \alpha S_0 - \gamma
+\end{bmatrix}.
+$$
+
+### Autovalores e estabilidade
+
+Os autovalores de uma matriz triangular superior são os elementos da diagonal principal: $\lambda_1 = 0$ e $\lambda_2 = \alpha S_0 - \gamma$.
+
+O autovalor nulo está associado à direção tangente à variedade de equilíbrios ($I=0$), refletindo a conservação do número total de indivíduos.
+O segundo autovalor, $\lambda_2 = \alpha S_0 - \gamma$, determina a estabilidade da direção transversal (perpendicular ao eixo $I=0$). Se $\lambda_2 < 0$ (isto é, $\alpha S_0 < \gamma$), pequenas perturbações na população infectada decaem exponencialmente e a doença não se espalha. Se $\lambda_2 > 0$ ($\alpha S_0 > \gamma$), o equilíbrio é instável – qualquer introdução mínima de infectados cresce, deflagrando uma epidemia.
+
+A condição $\lambda_2 > 0$ é equivalente a $\mathcal{R}_0 = \alpha S_0/\gamma > 1$. Portanto, o limiar epidêmico é $\mathcal{R}_0 = 1$: para $\mathcal{R}_0 > 1$ a epidemia se instaura; para $\mathcal{R}_0 < 1$ a infecção desaparece espontaneamente.
+
+## Parte 2 – O Fim da Epidemia: Equilíbrio Final e a Equação Transcendental
+
+Após a passagem da epidemia, o número de infectados tende a zero ($I_\infty = 0$) enquanto os suscetíveis atingem um valor assintótico $S_\infty$. Define‑se a fração de sobreviventes $s = S_\infty / S_0$. A partir da integração das trajetórias no plano de fase (Murray, 1993), deduz‑se a equação transcendental:
+
+$$
+\ln s = \mathcal{R}_0 (s - 1). \tag{1}
+$$
+
+Esta equação relaciona a severidade da epidemia ($s$) com o poder de transmissão da doença ($\mathcal{R}_0$).
+
+### Análise de soluções
+
+A equação (1) sempre admite a solução trivial $s = 1$, que corresponde à situação em que a epidemia não ocorre (toda a população permanece suscetível). Biologicamente, isso representa o caso limítrofe $\mathcal{R}_0 = 1$ ou uma doença que não se propaga.
+
+Para $\mathcal{R}_0 > 1$, existe uma segunda solução no intervalo $(0,1)$. Para encontrá‑la numericamente, fixamos $\mathcal{R}_0 = 3$ e resolvemos a equação $f(s) = \ln s - 3(s-1) = 0$ no intervalo $(0,1)$.
+
+```{julia}
+#| label: sol-transcendental
+#| fig-cap: 'Solução da equação transcendental $\ln s = \mathcal{R}_0 (s-1)$ para $\mathcal{R}_0=3$'
+# @label: fig:transcendental
+# @title: Código 2: Resolução numérica da equação transcendental
+# @caption: Aplicação do método da bissecção para encontrar a fração de sobreviventes s no intervalo (0,1) com R0=3.
+# @backlink: ↩ Voltar para o gráfico
+using Roots, Plots
+
+R0 = 3.0
+f(s) = log(s) - R0*(s - 1)   # definida apenas para s > 0
+
+# Método da bissecção no intervalo (0.01, 0.99) – seguro
+s_final = find_zero(f, (0.01, 0.99), Roots.Bisection())
+
+# Para visualização, plotamos a função apenas no intervalo válido
+s_range = range(0.02, 1, length=200)
+plot(s_range, f.(s_range),
+     label="f(s) = ln s - R0 (s-1)",
+     xlabel="s", ylabel="f(s)", linewidth=2)
+hline!([0], linestyle=:dash, label="Zero")
+scatter!([s_final], [0],
+         label="Raiz s = $(round(s_final, digits=4))",
+         markersize=6, color=:red)
+title!("Equação transcendental para R₀ = 3")
+```
+
+O valor encontrado para a raiz é $s \approx `{julia} round(s_final, digits=4)`$ (o valor exato depende da tolerância numérica, mas fica próximo de `{julia} round(s_final, digits=2)`). Isso significa que, ao final da epidemia, apenas cerca de `{julia} round((1 - s_final)*100, digits=1)`% da população inicial de suscetíveis permanece sem ter contraído a doença; os outros `{julia} round((s_final)*100, digits=1)`% foram infectados (e subsequentemente removidos). Em outras palavras, a epidemia cessa não por falta de suscetíveis, mas porque a densidade de infectados se torna insuficiente para sustentar a transmissão, conforme a análise de estabilidade local já indicava.
+
+# Conclusão
+
+A análise do modelo SIR revela dois limiares fundamentais: (i) o número reprodutivo básico $\mathcal{R}_0 = `{julia} R0`$ determina se uma epidemia pode iniciar – $\mathcal{R}_0 > 1$ implica instabilidade do equilíbrio livre de doença e consequente surto; (ii) a epidemia termina espontaneamente quando a fração de suscetíveis cai abaixo do valor crítico $s \approx `{julia} round(s_final, digits=4)`$ dado pela equação transcendental $\ln s = \mathcal{R}_0(s-1)$. Para $\mathcal{R}_0 = `{julia} R0`$, isso resulta em apenas `{julia} round(s_final*100, digits=1)`% de sobreviventes. Em outras palavras, a epidemia cessa não por falta de suscetíveis, mas porque a densidade de infectados se torna insuficiente para sustentar a transmissão, conforme a análise de estabilidade local já indicava.
+
+Esses resultados ilustram o poder da modelagem matemática para prever o comportamento de doenças infecciosas e subsidiar estratégias de controle, como a vacinação em massa visando reduzir $\mathcal{R}_0$ para valores inferiores a 1. A fórmula transcendental $\ln s = \mathcal{R}_0(s-1)$ é particularmente útil para estimar o esforço vacinal necessário: para uma dada doença, a fração mínima da população a ser imunizada para evitar uma epidemia é $p \geq 1 - 1/\mathcal{R}_0$. Assim, quanto maior o poder de transmissão, maior a cobertura vacinal exigida.
+
+# Referências {.unnumbered}
+
+::: {#refs}
+:::
+
+\onecolumn

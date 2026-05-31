@@ -1,0 +1,423 @@
+---
+lang: pt
+# bibliography: bib.bib
+csl: abnt-num.csl
+link-citations: true
+filters:
+  - code-appendix
+nocite: |
+  @*
+crossref:
+  fig-title: Figura
+  tbl-title: Tabela
+  fig-prefix: Fig.
+  eq-prefix: Eq.
+code-appendix-title: 'Apêndice: Códigos Fontes'
+code-appendix-header-level: 1
+format:
+  html:
+    toc: false
+    code-fold: true
+    format-links: false
+    code-overflow: wrap
+    fig-format: png
+  pdf:
+    toc: false
+    code-overflow: wrap
+    number-sections: true
+    keep-tex: false
+    echo: true
+    pdf-engine-opts: 
+      - "-shell-escape"
+    papersize: a4
+    fig-dpi: 300
+    classoption: [12pt, a4paper]
+    geometry:
+      - a4paper
+      - top=2cm
+      - left=2cm
+      - right=2cm
+      - bottom=2cm
+    fig-format: png
+    fig-cap-location: top
+    pdf-engine: lualatex
+    include-in-header:
+      text: |
+        % Adiciona pontos para seções (títulos de nível 1)
+        \KOMAoption{toc}{sectionentrywithdots}
+
+        \usepackage{tcolorbox}
+        \tcbuselibrary{skins}
+        \let\oldrule\rule
+        \renewcommand{\rule}[2]{\oldrule{\linewidth}{0.8pt}}
+
+        % Fonte Times New Roman
+        \usepackage{mathptmx}
+        \usepackage{indentfirst}
+
+        % Notas de rodapé: tamanho 10pt, entrelinha simples, posicionamento fixo no rodapé
+        \usepackage[bottom]{footmisc}
+        \renewcommand{\footnotesize}{\fontsize{10}{12}\selectfont}
+        \setlength{\footnotesep}{6pt}
+
+        % Tamanho da fonte das legendas
+        \usepackage{caption}
+        \captionsetup[figure]{font=footnotesize}   % está definido acima
+        \captionsetup[table]{font=footnotesize}
+
+        % Citações longas (>3 linhas): recuo 4cm, fonte 11pt, espaçamento simples
+        \renewenvironment{quote}
+          {\list{}{\rightmargin=0cm \leftmargin=4cm}\item\relax
+           \singlespacing\fontsize{11}{13}\selectfont}
+          {\endlist}
+
+        % Quebra de linha em blocos de código
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+        breaklines=true,
+        breakanywhere=true,
+        commandchars=\\\{\},
+        breaksymbol={},
+        breakautoindent=false
+        }
+
+        % Caracteres Unicode especiais
+        \usepackage{newunicodechar}
+        \newunicodechar{↩}{\ensuremath{\hookleftarrow}}
+        \newunicodechar{︎}{}
+
+        % Indentação no início dos parágrafos
+        \usepackage{indentfirst}
+
+        % Cabeçalho e rodapé, numeração no rodapé direito
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhf{} 
+        \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+        \renewcommand{\headrulewidth}{0pt}
+        \renewcommand{\headrulewidth}{0pt}
+        \fancypagestyle{plain}{
+          \fancyhf{}
+          \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+          \renewcommand{\headrulewidth}{0pt}
+          \renewcommand{\headrulewidth}{0pt}
+        }
+        % Remove marcações de seção no cabeçalho
+        \renewcommand{\sectionmark}[1]{}
+        \renewcommand{\subsectionmark}[1]{}
+        % Suprime o \maketitle no início do corpo do texto
+        \AtBeginDocument{\renewcommand{\maketitle}{}}
+
+        % Parágrafo: indentação de 1.2em, sem espaço extra entre parágrafos
+        \setlength{\parindent}{1.2em}
+        \setlength{\parskip}{0pt}
+
+        % Espaçamento 1,5 entre linhas (norma ABNT)
+        \usepackage{setspace} 
+        \onehalfspacing
+
+        % Redefine o ambiente quote para ser uma caixa cinza
+        \renewenvironment{quote}
+          {\begin{tcolorbox}[
+            enhanced,
+            colback=gray!10!white, 
+            colframe=gray!10!white,
+            colupper=gray!60!black,
+            arc=0pt, 
+            boxrule=0pt, 
+            left=15pt, 
+            right=10pt, 
+            top=5pt, 
+            bottom=5pt,
+            borderline west={3pt}{0pt}{gray!80!black}
+          ]}
+          {\end{tcolorbox}}
+engine: jupyter
+quarto_modo_escrita: false
+quarto_usar_local_fisico: false
+quarto_ignorar_ativos: false
+quarto_modo_rapido: false
+quarto_gerais: [bib.bib, abnt-num.csl, ifsc.jpg]
+quarto_extensoes: [glue, cl-roberts (modificada)]
+quarto_id: 2e3529ba
+quarto_comp_nativa: false
+quarto_cache: false
+quarto_outputfile: true
+quarto_push_comp: true
+references:
+- id: Murray1993
+  title: 'Mathematical Biology'
+  author: [Murray, J. D.]
+  issued:
+    - year: 1989
+  publisher: Springer
+- id: IFSC2026
+  title: '7600132 - Introdução à Modelagem Matemática em Biologia: Modelagem de Dengue Urbana — parte 6'
+  author: [IFSC - Instituto de Física de São Carlos]
+  issued:
+    - year: 2026
+  publisher: 'Universidade de São Paulo'
+  address: 'São Carlos'
+  url: 'https://edisciplinas.usp.br/course/view.php?id=137935'
+  urldate: '2026-05-17'
+---
+
+```{julia}
+# @title: Código 1: Funções, parâmetros e EDOs
+# @label: Cálculo Geral
+using Plots, Plots.Measures, LinearAlgebra, DifferentialEquations, LaTeXStrings
+
+default(
+    guidefontsize = 30,
+    titlefontsize = 30,
+    tickfontsize = 30,
+    legendfontsize = 30,
+    linewidth = 1.5,
+    margin = 15mm
+)
+
+# Parâmetros fixos (valores típicos)
+const b, p, p_prime, N, a, m = 0.5, 0.5, 0.5, 1000.0, 0.1, 0.05
+
+# Modelo base (Malária)
+function malaria!(du, u, p, t)
+    I, i = u
+    b, p_humano_mosquito, p_mosquito_humano, N, a, m = p
+    du[1] = b * p_mosquito_humano * i * ( (N - I)/N ) - a * I
+    du[2] = b * p_humano_mosquito * (N - i) * (I/N) - m * i
+end
+
+# Modelo Dengue (com transmissão vertical)
+function dengue!(du, u, p, t)
+    I, i = u
+    b, p_humano_mosquito, p_mosquito_humano, N, a, m, q = p
+    du[1] = b * p_mosquito_humano * i * ( (N - I)/N ) - a * I
+    du[2] = b * p_humano_mosquito * (N - i) * (I/N) - m * i + q * m * i
+end
+
+nothing
+```
+
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[height=2.2cm]{ifsc.jpg}\hspace{0.3cm} \\
+        \large \textbf{UNIVERSIDADE DE SÃO PAULO} \\
+        \large \textbf{INSTITUTO DE FÍSICA DE SÃO CARLOS} \\
+        \large \textbf{BACHARELADO EM FÍSICA BIOMOLECULAR} \\
+    \vfill 
+    \vspace{2cm}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+    \vfill 
+        \large \textbf{INTRODUÇÃO À MODELAGEM MATEMÁTICA EM BIOLOGIA} \\
+    \vspace{0.5cm}
+        {\large \textbf{MODELAGEM DA DENGUE URBANA — PROJETO 6}} \\
+    \vfill
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\begin{titlepage}
+    \begin{center}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+        \vfill
+        \Large \textbf{MODELAGEM DA DENGUE URBANA — PROJETO 6} \\
+        \vfill
+    \end{center}
+    \hspace{.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+        \begin{singlespace}
+            \small
+            Relatório técnico apresentado à disciplina de Introdução à Modelagem Matemática em Biologia do Instituto de Física de São Carlos — USP, como requisito parcial para avaliação.
+        \end{singlespace}
+        \begin{singlespace}
+            \textbf{Orientador:} Jose Fernando Fontanari
+        \end{singlespace}
+    \end{minipage}
+    \vfill
+    \begin{center}
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\hypersetup{linkcolor=black}
+\tableofcontents
+
+\newpage
+\hypersetup{linkcolor=blue}
+\twocolumn
+
+# Introdução e Contexto
+
+A dengue é uma arbovirose transmitida pelo mosquito *Aedes aegypti* que representa um grave problema de saúde pública em regiões tropicais e subtropicais. Diferentemente da malária, onde o mosquito só se torna vetor após picar um humano infectado, o vírus da dengue apresenta um fenômeno denominado **transmissão transovariana** (ou vertical). Isso significa que uma fêmea infectada pode transmitir o vírus diretamente para seus ovos. Consequentemente, uma parcela dos novos mosquitos já nasce apta a transmitir a doença, sem nunca ter picado um humano doente.
+
+O modelo clássico de Ross–Macdonald, originalmente desenvolvido para a malária, descreve a dinâmica de interação entre hospedeiros humanos e vetores. Contudo, ele não considera a transmissão vertical. Este projeto modifica o modelo original para incluir esse fator biológico e analisa como ele dificulta o controle da doença em áreas urbanas, especialmente no que tange à eficácia de campanhas de fumigação.
+
+# Desenvolvimento
+
+## O Modelo Base (Ross–Macdonald)
+
+O modelo de Ross–Macdonald para a malária é dado pelo sistema de equações diferenciais ordinárias:
+
+$$
+\begin{aligned}
+\frac{dI}{dt} &= b p' i \left( \frac{N - I}{N} \right) - a I, \\[6pt]
+\frac{di}{dt} &= b p (n - i) \left( \frac{I}{N} \right) - m i,
+\end{aligned}
+$$
+
+\noindent onde $I(t)$: número de humanos infectados; $i(t)$: número de mosquitos infectados; $N$: população humana total (constante); $n$: população de mosquitos (constante); $b$: taxa de picada por mosquito; $p$: probabilidade de transmissão de humano para mosquito; $p'$: probabilidade de transmissão de mosquito para humano; $a$: taxa de recuperação humana (inversa da duração da infecção); $m$: taxa de mortalidade de mosquitos (inversa da vida média).
+
+A população de mosquitos $n$ é mantida constante por hipótese: para cada mosquito que morre (taxa $m n$), nasce um novo mosquito.
+
+## Incorporação da Transmissão Vertical
+
+Introduzimos o parâmetro $q$: a **probabilidade de um descendente de uma fêmea infectada nascer já infectado**. Para deduzir o termo adicional na equação de $i(t)$, primeito temos a fração de nascimentos provenientes de mães infectadas é $i/n$. Como a taxa total de nascimentos é $m n$, a taxa de nascimentos de mães infectadas é $m n \times (i/n) = m i$. Desses nascimentos, uma fração $q$ nasce com o vírus. Assim, a taxa de acréscimo de mosquitos infectados por transmissão vertical é $q m i$. Portanto, o sistema modificado para a dengue torna‑se:
+
+$$
+\begin{aligned}
+\frac{dI}{dt} &= b p' i \left( \frac{N - I}{N} \right) - a I, \\[6pt]
+\frac{di}{dt} &= b p (n - i) \left( \frac{I}{N} \right) - m i + q m i.
+\end{aligned}
+$$
+
+Na ausência de humanos ($I=0$), a equação para $i$ reduz‑se a $di/dt = m (q-1) i$. Para $q<1$, o único equilíbrio é $i=0$, estável; a transmissão vertical sozinha não sustenta a doença, mas retarda sua extinção.
+
+## I. Formulação Matemática e Simulação
+
+Utilizamos os parâmetros: $b = p = p' = 0,5$, $N = n = 1000$, $a = 0,1$, $m = 0,05$. Simulamos o sistema para diferentes valores de $q$ ($0,0; 0,3; 0,6; 0,9$) e condições iniciais $I(0)=1$, $i(0)=10$.
+
+```{julia}
+#| label: fig-simulacao
+#| fig-cap: 'Evolução temporal de humanos infectados (I) e mosquitos infectados (i) para diferentes taxas de transmissão vertical $q$'
+# @label: fig:simulacao
+# @title: Código 2: Simulação temporal
+# @caption: Quanto maior q, maior o nível de equilíbrio e mais rápida a recuperação após perturbações. Para q=0 (malária), a doença tende a desaparecer mais rapidamente.
+# @backlink: ↩ Voltar para o gráfico
+q_vals = [0.0, 0.3, 0.6, 0.9]
+tmax = 200.0
+I0, i0 = 1.0, 10.0
+cores = [:blue, :green, :orange, :red]
+
+p1 = plot(xlabel="Tempo (dias)", ylabel="Humanos infectados (I)",
+          title="Evolução de I(t) para diferentes q", legend=:topright,
+          guidefontsize=8, titlefontsize=10, tickfontsize=8, legendfontsize=8,
+          size=(400,300))
+p2 = plot(xlabel="Tempo (dias)", ylabel="Mosquitos infectados (i)",
+          title="Evolução de i(t) para diferentes q", legend=:topright,
+          guidefontsize=8, titlefontsize=10, tickfontsize=8, legendfontsize=8,
+          size=(400,300))
+
+for (idx, q) in enumerate(q_vals)
+    prob = ODEProblem(dengue!, [I0, i0], (0.0, tmax), (b, p, p_prime, N, a, m, q))
+    sol = solve(prob, Tsit5())
+    plot!(p1, sol.t, sol[1,:], label="q = $q", color=cores[idx], linewidth=1.5)
+    plot!(p2, sol.t, sol[2,:], label="q = $q", color=cores[idx], linewidth=1.5)
+end
+
+p_total = plot(p1, p2, layout=(2,1), size=(400,600), legend=:topright)
+```
+
+\begin{center}
+\footnotesize
+\noindent Simulação da evolução de $I(t)$ e $i(t)$ para diferentes valores de $q$. Observa‑se que, para $q=0$ (malária), a infecção desaparece rapidamente após o pico inicial. Para $q>0$, os níveis de equilíbrio são mais elevados e a ressurgência é mais rápida. \hyperlink{code-simulacao}{[Código]}
+\end{center}
+
+## II. Análise de Estabilidade e $\mathcal{R}_0$
+
+No modelo original (sem transmissão vertical), o número reprodutivo básico é:
+
+$$
+\mathcal{R}_0^{\text{malária}} = \frac{b^2 p p'}{a m}.
+$$
+
+Com os parâmetros adotados, $\mathcal{R}_0^{\text{malária}} = 0,5^3 / (0,1 \times 0,05) = 0,125 / 0,005 = 2,5$.
+
+A transmissão vertical introduz uma nova via de infecção, aumentando o $\mathcal{R}_0$ efetivo. Uma análise de estabilidade linear do equilíbrio livre de doença $(I=0,i=0)$ fornece a matriz Jacobiana:
+
+$$
+J = \begin{bmatrix}
+-a & b p' \\
+\dfrac{b p}{N} & m(q-1)
+\end{bmatrix}.
+$$
+
+O número reprodutivo básico efetivo pode ser obtido pelo método da próxima geração, resultando na expressão aproximada:
+
+$$
+\mathcal{R}_0^{\text{ef}}(q) = \frac{\mathcal{R}_0^{\text{malária}}}{1 - q}.
+$$
+
+Para $q=0,3$, $\mathcal{R}_0^{\text{ef}} \approx 2,5 / 0,7 \approx 3,57$; para $q=0,6$, $\mathcal{R}_0^{\text{ef}} \approx 2,5 / 0,4 = 6,25$.
+
+```{julia}
+#| label: fig-r0
+#| fig-cap: 'Aumento do número reprodutivo básico efetivo $\mathcal{R}_0^{\text{ef}}(q)$ com a transmissão vertical'
+# @label: fig:r0
+# @title: Código 3: Cálculo do R0 efetivo
+# @caption: Para q próximo de 0,6, o R0 efetivo ultrapassa 1, tornando a doença endêmica mesmo com baixa transmissão horizontal.
+# @backlink: ↩ Voltar para o gráfico
+q_vals_r0 = 0:0.01:0.99
+R0_mal = (b^2 * p * p_prime) / (a * m)
+R0_ef_vals = R0_mal ./ (1 .- q_vals_r0)
+plot(q_vals_r0, R0_ef_vals, xlabel="q (taxa de transmissão vertical)", 
+     ylabel="R₀ efetivo", title="Aumento do R₀ com a transmissão vertical",
+     legend=false, linewidth=2, color=:red)
+hline!([1], linestyle=:dash, color=:black, label="Limiar epidêmico (R₀=1)")
+```
+
+\begin{center}
+\footnotesize
+\noindent Relação entre $q$ e $\mathcal{R}_0^{\text{efetivo}}$. Para $q > 1 - 1/\mathcal{R}_0^{\text{malária}} \approx 0,6$, o $\mathcal{R}_0$ efetivo supera 1, indicando que a doença se torna endêmica mesmo com baixa circulação humana. \hyperlink{code-r0}{[Código]}
+\end{center}
+
+## III. Discussão Biológica e Políticas Públicas
+
+### Efeito da fumigação e rápida ressurgência
+
+Campanhas de fumigação aumentam o parâmetro $m$ (mortalidade de mosquitos adultos). No modelo sem transmissão vertical, um aumento de $m$ reduz drasticamente $i$, podendo eliminar a doença temporariamente. Com transmissão vertical, mesmo que a fumigação reduza $i$ a valores muito baixos, o termo $q m i$ continua atuando. Além disso, ovos infectados depositados antes da fumigação podem eclodir após o término da ação do inseticida, reintroduzindo o vírus.
+
+```{julia}
+#| label: fig-fumigacao
+#| fig-cap: 'Efeito do aumento da mortalidade de mosquitos ($m$) na população de infectados ($q=0,3$)'
+# @label: fig:fumigacao
+# @title: Código 4: Efeito da fumigação
+# @caption: Após o aumento de m (linha tracejada), a população de mosquitos infectados cai rapidamente, mas ressurge a um nível próximo ao anterior.
+# @backlink: ↩ Voltar para o gráfico
+m_base, m_fum = 0.05, 0.2
+q_fix = 0.3
+prob_base = ODEProblem(dengue!, [1.0, 10.0], (0.0, 200.0), (b, p, p_prime, N, a, m_base, q_fix))
+prob_fumi = ODEProblem(dengue!, [1.0, 10.0], (0.0, 200.0), (b, p, p_prime, N, a, m_fum, q_fix))
+sol_base = solve(prob_base, Tsit5())
+sol_fumi = solve(prob_fumi, Tsit5())
+plot(xlabel="Tempo (dias)", ylabel="Mosquitos infectados (i)",
+     title="Efeito da fumigação (aumento de m)", legend=:topright)
+plot!(sol_base.t, sol_base[2,:], label="m = $m_base (sem fumigação)", color=:blue, linewidth=2)
+plot!(sol_fumi.t, sol_fumi[2,:], label="m = $m_fum (com fumigação)", color=:red, linewidth=2, linestyle=:dash)
+```
+
+\begin{center}
+\footnotesize
+\noindent Efeito da fumigação (aumento de $m$ de 0,05 para 0,2) na população de mosquitos infectados para $q=0,3$. Observa‑se a queda inicial seguida de ressurgência. \hyperlink{code-fumigacao}{[Código]}
+\end{center}
+
+### Implicações para o controle
+
+A resistência dos ovos do *Aedes aegypti* (que podem sobreviver por meses no ambiente) combinada com a transmissão vertical cria um **reservatório ambiental** do vírus. Isso exige estratégias de controle integrado:
+- Eliminação de criadouros (ovos e larvas) com larvicidas e remoção de água parada.
+- Vigilância entomológica incluindo detecção do vírus em ovos.
+- Vacinação para reduzir a transmissão horizontal e, consequentemente, a pressão sobre o reservatório vertical.
+
+# Conclusão
+
+A incorporação da transmissão vertical ao modelo de Ross–Macdonald mostra que a dengue é intrinsecamente mais persistente do que a malária. Mesmo com valores realistas de $q$ (entre 0,1 e 0,5), o aumento efetivo de $\mathcal{R}_0$ e a rápida ressurgência pós‑fumigação dificultam o controle. A resistência dos ovos exige estratégias que ataquem tanto o mosquito adulto quanto seus criadouros. O modelo fornece uma base quantitativa para o planejamento de políticas públicas contra a dengue.
+
+# Referências {.unnumbered}
+
+::: {#refs}
+:::
+
+\onecolumn

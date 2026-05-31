@@ -1,0 +1,525 @@
+---
+lang: pt
+# bibliography: bib.bib
+csl: abnt-num.csl
+link-citations: true
+filters:
+  - code-appendix
+nocite: |
+  @*
+crossref:
+  fig-title: Figura
+  tbl-title: Tabela
+  fig-prefix: Fig.
+  eq-prefix: Eq.
+code-appendix-title: 'Apêndice: Códigos Fontes'
+code-appendix-header-level: 1
+format:
+  html:
+    toc: false
+    code-fold: true
+    format-links: false
+    code-overflow: wrap
+    fig-format: png
+  pdf:
+    toc: false
+    code-overflow: wrap
+    number-sections: true
+    keep-tex: false
+    echo: true
+    pdf-engine-opts: 
+      - "-shell-escape"
+    papersize: a4
+    fig-dpi: 300
+    classoption: [12pt, a4paper]
+    geometry:
+      - a4paper
+      - top=2cm
+      - left=2cm
+      - right=2cm
+      - bottom=2cm
+    fig-format: png
+    fig-cap-location: top
+    pdf-engine: lualatex
+    include-in-header:
+      text: |
+        % Adiciona pontos para seções (títulos de nível 1)
+        \KOMAoption{toc}{sectionentrywithdots}
+
+        \usepackage{tcolorbox}
+        \tcbuselibrary{skins}
+        \let\oldrule\rule
+        \renewcommand{\rule}[2]{\oldrule{\linewidth}{0.8pt}}
+
+        % Fonte Times New Roman
+        \usepackage{mathptmx}
+        \usepackage{indentfirst}
+
+        % Notas de rodapé: tamanho 10pt, entrelinha simples, posicionamento fixo no rodapé
+        \usepackage[bottom]{footmisc}
+        \renewcommand{\footnotesize}{\fontsize{10}{12}\selectfont}
+        \setlength{\footnotesep}{6pt}
+
+        % Tamanho da fonte das legendas
+        \usepackage{caption}
+        \captionsetup[figure]{font=footnotesize}   % está definido acima
+        \captionsetup[table]{font=footnotesize}
+
+        % Citações longas (>3 linhas): recuo 4cm, fonte 11pt, espaçamento simples
+        \renewenvironment{quote}
+          {\list{}{\rightmargin=0cm \leftmargin=4cm}\item\relax
+           \singlespacing\fontsize{11}{13}\selectfont}
+          {\endlist}
+
+        % Quebra de linha em blocos de código
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+        breaklines=true,
+        breakanywhere=true,
+        commandchars=\\\{\},
+        breaksymbol={},
+        breakautoindent=false
+        }
+
+        % Caracteres Unicode especiais
+        \usepackage{newunicodechar}
+        \newunicodechar{↩}{\ensuremath{\hookleftarrow}}
+        \newunicodechar{︎}{}
+
+        % Indentação no início dos parágrafos
+        \usepackage{indentfirst}
+
+        % Cabeçalho e rodapé, numeração no rodapé direito
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhf{} 
+        \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+        \renewcommand{\headrulewidth}{0pt}
+        \renewcommand{\headrulewidth}{0pt}
+        \fancypagestyle{plain}{
+          \fancyhf{}
+          \fancyhead[R]{\fontsize{10}{12}\selectfont\thepage}
+          \renewcommand{\headrulewidth}{0pt}
+          \renewcommand{\headrulewidth}{0pt}
+        }
+        % Remove marcações de seção no cabeçalho
+        \renewcommand{\sectionmark}[1]{}
+        \renewcommand{\subsectionmark}[1]{}
+        % Suprime o \maketitle no início do corpo do texto
+        \AtBeginDocument{\renewcommand{\maketitle}{}}
+
+        % Parágrafo: indentação de 1.2em, sem espaço extra entre parágrafos
+        \setlength{\parindent}{1.2em}
+        \setlength{\parskip}{0pt}
+
+        % Espaçamento 1,5 entre linhas (norma ABNT)
+        \usepackage{setspace} 
+        \onehalfspacing
+
+        % Redefine o ambiente quote para ser uma caixa cinza
+        \renewenvironment{quote}
+          {\begin{tcolorbox}[
+            enhanced,
+            colback=gray!10!white, 
+            colframe=gray!10!white,
+            colupper=gray!60!black,
+            arc=0pt, 
+            boxrule=0pt, 
+            left=15pt, 
+            right=10pt, 
+            top=5pt, 
+            bottom=5pt,
+            borderline west={3pt}{0pt}{gray!80!black}
+          ]}
+          {\end{tcolorbox}}
+engine: jupyter
+quarto_modo_escrita: false
+quarto_usar_local_fisico: false
+quarto_ignorar_ativos: false
+quarto_modo_rapido: false
+quarto_gerais: [bib.bib, abnt-num.csl, ifsc.jpg]
+quarto_extensoes: [glue, cl-roberts (modificada)]
+quarto_id: 7da7e310
+quarto_comp_nativa: false
+quarto_cache: false
+quarto_outputfile: true
+quarto_push_comp: true
+references:
+- id: Murray1993
+  title: 'Mathematical Biology'
+  author: [Murray, J. D.]
+  issued:
+    - year: 1989
+  publisher: Springer
+- id: IFSC2026
+  title: '7600132 - Introdução à Modelagem Matemática em Biologia: Bernoulli e a Doença G — parte 7'
+  author: [IFSC - Instituto de Física de São Carlos]
+  issued:
+    - year: 2026
+  publisher: 'Universidade de São Paulo'
+  address: 'São Carlos'
+  url: 'https://edisciplinas.usp.br/course/view.php?id=137935'
+  urldate: '2026-05-30'
+---
+
+```{julia}
+# @title: Código 1: Funções e variáveis globais
+# @label: Cálculo Geral
+using Plots, Plots.Measures, LinearAlgebra, DifferentialEquations, LaTeXStrings
+
+default(
+    guidefontsize = 30,
+    titlefontsize = 30,
+    tickfontsize = 30,
+    legendfontsize = 30,
+    linewidth = 1.5,
+    margin = 15mm
+)
+
+nothing
+```
+
+\begin{titlepage}
+    \begin{center}
+        \includegraphics[height=2.2cm]{ifsc.jpg}\hspace{0.3cm} \\
+        \large \textbf{UNIVERSIDADE DE SÃO PAULO} \\
+        \large \textbf{INSTITUTO DE FÍSICA DE SÃO CARLOS} \\
+        \large \textbf{BACHARELADO EM FÍSICA BIOMOLECULAR} \\
+    \vfill 
+    \vspace{2cm}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+    \vfill 
+        \large \textbf{INTRODUÇÃO À MODELAGEM MATEMÁTICA EM BIOLOGIA} \\
+    \vspace{0.5cm}
+        {\large \textbf{BERNOULLI E A DOENÇA G — PROJETO 7}} \\
+    \vfill
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\begin{titlepage}
+    \begin{center}
+        \large \textbf{JOENYR DE PÁDUA COUTO DOMINGUES} \\
+        \vfill
+        \Large \textbf{BERNOULLI E A DOENÇA G — PROJETO 7} \\
+        \vfill
+    \end{center}
+    \hspace{.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+        \begin{singlespace}
+            \small
+            Relatório técnico apresentado à disciplina de Introdução à Modelagem Matemática em Biologia do Instituto de Física de São Carlos — USP, como requisito parcial para avaliação.
+        \end{singlespace}
+        \begin{singlespace}
+            \textbf{Orientador:} Jose Fernando Fontanari
+        \end{singlespace}
+    \end{minipage}
+    \vfill
+    \begin{center}
+        \large \textbf{SÃO CARLOS} \\
+        \large \textbf{2026}
+    \end{center}
+\end{titlepage}
+
+\newpage
+\hypersetup{linkcolor=black}
+\tableofcontents
+
+\newpage
+\hypersetup{linkcolor=blue}
+\twocolumn
+
+# Introdução
+
+Daniel Bernoulli, em 1766, utilizou tabelas de mortalidade para mostrar que a variolação, embora arriscada, aumentava a esperança de vida da população. O cerne do seu argumento era a comparação entre o risco imediato de um procedimento médico e o ganho estatístico de anos de vida futuros. Neste projeto, aplicamos essa lógica a uma patologia contemporânea hipotética – a **Doença G** – que afeta especificamente a população idosa. O objetivo é determinar sob quais condições uma vacina aplicada aos 60 anos, com um pequeno risco de morte imediato, torna‑se vantajosa do ponto de vista da utilidade populacional (expectativa de vida ao nascer). Para isso, generalizamos o modelo de Bernoulli admitindo uma taxa de infecção dependente da idade, $q(a)$, e utilizamos dados reais da Tábua de Mortalidade do IBGE 2017.
+
+# Desenvolvimento
+
+## Teoria – Generalização de Bernoulli
+
+Seja $P^*(a)$ o número de sobreviventes à idade $a$ na população livre da doença (coluna $I_x$ do IBGE). Na ausência da doença, a única causa de decréscimo populacional é a mortalidade natural, de modo que
+$$
+\frac{dP^*}{da} = -\mu(a) P^*(a),
+$$
+
+\noindent onde $\mu(a)$ é a taxa de mortalidade natural. A solução é
+$$
+P^*(a) = P^*(0) \exp\!\left(-\int_0^a \mu(x)\,dx\right).
+$$
+
+Agora, considere uma doença com taxa de infecção dependente da idade $q(a)$. Seja $S(a)$ o número de indivíduos vivos e ainda suscetíveis (nunca infectados) à idade $a$. Um suscetível pode ser retirado do grupo por morte natural (taxa $\mu$) ou por infecção (taxa $q$). Portanto,
+$$
+\frac{dS}{da} = -\bigl(\mu(a)+q(a)\bigr) S(a),
+\quad S(0)=P^*(0).
+$$
+
+\noindent Integrando, obtém‑se
+$$
+S(a) = P^*(0) \exp\!\left(-\int_0^a \mu(x)\,dx\right) \exp\!\left(-\int_0^a q(x)\,dx\right)
+$$
+$$
+= P^*(a) \exp\!\left(-\int_0^a q(x)\,dx\right). \tag{1}
+$$
+
+\noindent Para a população total $P(a)$ na presença da doença, há duas fontes de mortalidade adicional: além da mortalidade natural, os suscetíveis infectados morrem com probabilidade $p$ no momento da infecção. A taxa de mortalidade induzida pela doença é $p\,q(a)S(a)$. Assim, a equação diferencial para $P(a)$ é
+$$
+\frac{dP}{da} = -\mu(a)P(a) - p\,q(a)S(a).
+$$
+
+\noindent Definindo $Y(a)=P(a)/S(a)$ e utilizando $\frac{dP}{da}=Y'S + YS'$, com $S' = -(\mu+q)S$, obtém‑se após simplificação:
+$$
+Y'(a) = q(a)\bigl(Y(a)-p\bigr).
+$$
+
+\noindent Fazendo $Z(a)=Y(a)-p$, temos $Z'(a)=q(a)Z(a)$, cuja solução é $Z(a)=Z(0)\exp\!\bigl(\int_0^a q(x)dx\bigr)$. Como $P(0)=S(0)$, segue $Y(0)=1$ e $Z(0)=1-p$. Portanto
+$$
+Y(a)-p = (1-p)\exp\!\left(\int_0^a q(x)dx\right),
+$$
+
+\noindent e como $P(a)=Y(a)S(a)$, obtemos que $P(a)$ vale
+$$
+S(a)\left[p + (1-p)\exp\!\left(\int_0^a q(x)dx\right)\right]. \tag{2}
+$$
+
+\noindent Substituindo (1) em (2) obtém‑se uma forma compacta equivalente:
+$$
+P^*(a)\left[1-p\left(1-\exp\!\left(-\int_0^a q(x)dx\right)\right)\right]. \tag{3}
+$$
+
+As expressões (1), (2) e (3) são equivalentes; utiliza-se por conveniência nos cálculos numéricos.
+
+## Análise de Dados Reais (IBGE 2017)
+
+Utilizamos a Tábua Completa de Mortalidade para o Brasil – 2017 (coluna $I_x$, ambos os sexos, páginas 21‑22) como $P^*(a)$. Os dados para idades de 0 a 80 anos foram extraídos e normalizados. A seguir, construímos o gráfico de $P^*(a)$ e calculamos a esperança de vida ao nascer $E^*$ usando a regra dos trapézios.
+
+```{julia}
+#| label: fig-sobrevivencia
+#| fig-cap: 'Sobrevivência P^*(a) da população livre da doença (IBGE 2017)'
+# @label: fig:sobrevivencia
+# @title: Código 2: Dados IBGE e sobrevivência
+# @caption: Curva de sobrevivência $P^*(a)$ para idades de 0 a 80 anos, a partir da tábua de mortalidade.
+# @backlink: ↩ Voltar para o gráfico
+
+idades = 0:80
+# Dados exatos da tábua do IBGE 2017 – ambos os sexos (coluna I(x))
+lx = [
+    100000, 98719, 98635, 98581, 98540, 98506, 98477, 98451, 98427, 98405,
+    98383, 98361, 98337, 98310, 98277, 98236, 98166, 98079, 97977, 97864,
+    97741, 97609, 97469, 97323, 97174, 97025, 96877, 96731, 96583, 96434,
+    96281, 96123, 95962, 95795, 95624, 95447, 95263, 95072, 94872, 94662,
+    94440, 94206, 93956, 93691, 93406, 93100, 92770, 92417, 92037, 91629,
+    91192, 90724, 90223, 89686, 89113, 88501, 87848, 87151, 86408, 85619,
+    84780, 83889, 82941, 81931, 80854, 79702, 78472, 77161, 75760, 74260,
+    72655, 70942, 69120, 67184, 65130, 62956, 60664, 58260, 55744, 53120,
+    50394
+]
+
+P_estrela = lx ./ lx[1]  # normalizado para 1 no nascimento
+
+plot(idades, P_estrela, xlabel="Idade (anos)", ylabel="Sobrevivência P*(a)",
+     label="Dados IBGE", linewidth=2, color=:blue,
+     title="Sobrevivência livre da doença")
+```
+
+\begin{center}
+\footnotesize
+\noindent Gráfico da sobrevivência $P^*(a)$ obtido a partir da tábua de mortalidade do IBGE 2017. Observa‑se a redução gradual com a idade. \hyperlink{code-sobrevivencia}{[Código]}
+\end{center}
+
+### Cálculo da esperança de vida ao nascer $E^*$
+
+A esperança de vida ao nascer é a área sob a curva $P^*(a)$:
+$$
+E^* = \int_0^\infty P^*(a)\,da.
+$$
+
+\noindent Para os dados discretos de 0 a 80 anos, utilizamos a regra dos trapézios. Para os anos além dos 80, adotamos o resíduo fornecido pela coluna $T_x$ da tábua: $T(80+) = 481.694$ pessoas‑ano (para uma coorte inicial de 100.000 nascidos). Normalizando, o resíduo é $T(80+)/l_0 = 4,81694$.
+
+```{julia}
+# @title: Código 3: Cálculo da esperança de vida
+# @caption: Aplicação da regra dos trapézios para obter E*.
+function trapz(x, y)
+    n = length(x)
+    s = 0.0
+    for i in 1:(n-1)
+        s += (x[i+1] - x[i]) * (y[i] + y[i+1]) / 2
+    end
+    return s
+end
+
+E_estrela = trapz(idades, P_estrela)
+T80 = 481694
+residuo = T80 / lx[1]   # ≈ 4,81694
+E_estrela_total = E_estrela + residuo
+
+nothing
+```
+
+A esperança de vida ao nascer da população livre da doença é $E^* \approx `{julia} round(E_estrela_total, digits=2)`$ anos, valor coerente com a expectativa de vida oficial do IBGE para 2017 (76,0 anos).
+
+## O Problema da Doença G
+
+A taxa de infecção da Doença G é definida por:
+$$
+q(a) = \begin{cases}
+0, & 0 \le a < 60,\\[4pt]
+0{,}20, & a \ge 60.
+\end{cases}
+$$
+
+\noindent Utilizando a expressão (3) para $P(a)$, obtemos a nova esperança de vida ao nascer em função da letalidade $p$:
+$$
+E(p) = \int_0^\infty P(a)\,da
+$$
+$$
+= \int_0^{60} P^*(a)\,da + \int_{60}^\infty P^*(a)\left[1-p\bigl(1-e^{-0{,}20(a-60)}\bigr)\right]da.
+$$
+
+\noindent Para cada valor de $p$ (variando de 0 a 1), calculamos numericamente $E(p)$.
+
+```{julia}
+#| label: fig-letxp
+#| fig-cap: 'Razão da esperança de vida E(p)/E^* em função da letalidade p'
+# @label: fig:letxp
+# @title: Código 4: Cálculo da razão E(p)/E* para diferentes p
+# @caption: A proporção da expectativa de vida cai linearmente com o aumento da letalidade da doença.
+# @backlink: ↩ Voltar para o gráfico
+q(a) = a >= 60 ? 0.20 : 0.0
+
+function integral_q(a)
+    if a < 60
+        return 0.0
+    else
+        return 0.20 * (a - 60)
+    end
+end
+
+p_vals = 0:0.01:1.0
+E_p = zeros(length(p_vals))
+
+for (i, p) in enumerate(p_vals)
+    P_a = [P_estrela[j] * (1 - p * (1 - exp(-integral_q(idades[j])))) for j in 1:length(idades)]
+    E_p[i] = trapz(idades, P_a) + residuo
+end
+
+razao_E = E_p ./ E_estrela_total
+
+plot(p_vals, razao_E, xlabel="Letalidade p", ylabel="Razão E/E*",
+     label="E(p)/E*", linewidth=2, color=:red,
+     title="Impacto da letalidade na expectativa de vida")
+```
+
+\begin{center}
+\footnotesize
+\noindent Relação entre a letalidade $p$ da Doença G e a expectativa de vida ao nascer $E(p)$. Quanto mais letal a doença, menor a expectativa de vida. Para $p=0$ (doença não fatal), $E(0)=E^*$; para $p=1$ (doença sempre fatal), a expectativa de vida cai para aproximadamente `{julia} round(E_p[end], digits=1)` anos. \hyperlink{code-letxp}{[Código]}
+\end{center}
+
+## Dilema Ético e Decisão – Vacinação aos 60 Anos
+
+Suponha uma vacina aplicada exatamente aos 60 anos, que elimina totalmente o risco da Doença G, mas tem um risco de morte por choque anafilático $p' = 0,005$ (0,5%). A vacinação é aplicada a toda a coorte que atinge os 60 anos.
+
+Para calcular a nova expectativa de vida ao nascer sob a política de vacinação universal aos 60 anos, procedemos da seguinte forma:
+$$
+P_{\text{vac}}(a) = \begin{cases}
+P^*(a), & a < 60,\\
+(1-p')\,P^*(a), & a \ge 60.
+\end{cases}
+$$
+
+\noindent Portanto, a esperança de vida ao nascer com vacinação é:
+$$
+E_{\text{vac}} = \int_0^{60} P^*(a)\,da + (1-p')\int_{60}^\infty P^*(a)\,da.
+$$
+
+\noindent O termo $\int_{60}^\infty P^*(a)\,da$ é a área sob a curva de sobrevivência a partir dos 60 anos, que pode ser obtida da tábua (resíduo). No nosso cálculo, usamos a integração numérica.
+
+```{julia}
+# @title: Código 5: Expectativa de vida com vacinação
+# @caption: Cálculo da expectativa de vida ao nascer sob vacinação universal aos 60 anos.
+p_vac = 0.005
+idx_60 = findfirst(idades .== 60)
+if idx_60 === nothing
+    idx_60 = 61  # aproximação
+end
+# Integral de 0 a 60
+E_ate_60 = trapz(idades[1:idx_60], P_estrela[1:idx_60])
+# Integral de 60 até o fim
+E_depois_60 = trapz(idades[idx_60:end], P_estrela[idx_60:end]) + residuo
+
+E_vac = E_ate_60 + (1 - p_vac) * E_depois_60
+
+nothing
+```
+
+A vacinação universal aos 60 anos resulta em $E_{\text{vac}} \approx `{julia} round(E_vac, digits=2)`$ anos, ligeiramente abaixo da expectativa original $E^*$ devido ao risco anafilático.
+
+### Determinação da letalidade $p$ a partir da qual a vacinação é vantajosa
+
+Desejamos encontrar o valor de $p$ tal que $E(p) = E_{\text{vac}}$. Para $p$ acima desse limiar, a doença é tão letal que a vacinação (mesmo com risco anafilático) passa a ser benéfica.
+
+```{julia}
+#| label: fig-pontocritico
+#| fig-cap: 'Determinação do ponto crítico de letalidade para a vacinação'
+# @label: fig:pontocritico
+# @title: Código 6: Ponto crítico p_crit
+# @caption: A vacinação é vantajosa quando a letalidade p da doença supera aproximadamente 0,92%.
+# @backlink: ↩ Voltar para o gráfico
+
+function E_p_func(p)
+    P_a = [P_estrela[j] * (1 - p * (1 - exp(-integral_q(idades[j])))) for j in 1:length(idades)]
+    return trapz(idades, P_a) + residuo
+end
+
+# Método da bissecção
+function find_root(f, a, b, tol=1e-6)
+    fa = f(a)
+    fb = f(b)
+    if fa * fb > 0
+        error("f(a) e f(b) devem ter sinais opostos")
+    end
+    while (b - a) > tol
+        c = (a + b) / 2
+        fc = f(c)
+        if fc == 0
+            return c
+        elseif fa * fc < 0
+            b = c
+            fb = fc
+        else
+            a = c
+            fa = fc
+        end
+    end
+    return (a + b) / 2
+end
+
+p_crit = find_root(p -> E_p_func(p) - E_vac, 0.0, 1.0)
+
+plot(p_vals, E_p, xlabel="Letalidade p", ylabel="Esperança de vida (anos)",
+     label="E(p) (doença)", linewidth=2, color=:red)
+hline!([E_vac], linestyle=:dash, color=:blue, linewidth=2, label="E_vac = $(round(E_vac, digits=2))")
+vline!([p_crit], linestyle=:dot, color=:green, linewidth=2, label="p_crit = $(round(p_crit, digits=4))")
+title!("Comparação entre doença e vacinação")
+```
+
+\begin{center}
+\footnotesize
+\noindent O ponto de equilíbrio ocorre em $p_{\text{crit}} \approx `{julia} round(p_crit, digits=4)`$. Para letalidades superiores a `{julia} round(p_crit*100, digits=2)` porcentos, a vacinação universal aos 60 anos proporciona maior expectativa de vida do que a ausência de vacina. \hyperlink{code-pontocritico}{[Código]}
+\end{center}
+
+# Análise e Conclusão {.unnumbered}
+
+O modelo mostra que, para a Doença G com os parâmetros adotados, a vacinação em massa de idosos aos 60 anos só é vantajosa do ponto de vista da utilidade populacional (expectativa de vida média) quando a letalidade da doença supera aproximadamente `{julia} round(p_crit*100, digits=2)`%. Abaixo desse limiar, o risco anafilático da vacina supera o benefício médio de proteção contra a doença.
+
+Entretanto, a decisão de implementar uma campanha de vacinação não pode se basear apenas na média populacional. Há um conflito ético fundamental, primeiramente, quanto ao **risco individual**: cada idoso de 60 anos que toma a vacina corre um risco de `{julia} p_vac*100`% de morte imediata. Para aquele indivíduo, o benefício só existe se ele estiver com alta probabilidade de contrair a doença e morrer por ela. Como a taxa de infecção $q=0,20$ ao ano após os 60 anos, a probabilidade acumulada de infecção até o final da vida é elevada (cerca de 98%), e a letalidade $p$ da doença é desconhecida no início da epidemia. Se $p$ for baixo, o indivíduo pode estar assumindo um risco desnecessário. Outra questão é o **benefício coletivo**: a sociedade ganha em média alguns meses de expectativa de vida quando $p > `{julia} round(p_crit, digits=4)`$. Para uma doença muito letal (ex.: $p=50\%$), a perda de expectativa de vida em relação à população livre é substancial (cerca de `{julia} round(E_estrela_total - E_p[51], digits=1)` anos). Então o dilema é se vale a pena impor um risco pequeno, mas real, a todos os idosos para obter um ganho médio de vida que pode ser pouco percebido individualmente?
+
+O modelo sugere que, para $p$ superior a cerca de `{julia} round(p_crit, digits=4)`, a vacinação é recomendável sob uma ótica utilitarista. Contudo, uma análise mais refinada deveria incorporar a aversão ao risco da população, a autonomia do paciente e a possibilidade de vacinação seletiva.
+
+# Referências {.unnumbered}
+
+::: {#refs}
+:::
+
+\onecolumn

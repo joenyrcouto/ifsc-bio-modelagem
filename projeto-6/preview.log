@@ -1,0 +1,16 @@
+=== Preview Log === dom 17 mai 2026 20:54:48
+
+[stderr] [91mERROR: projeto-6.qmd not found
+[stderr] 
+[stderr] Stack trace:
+[stderr]     at _Command.actionHandler (file:///opt/quarto/bin/quarto.js:162720:11)
+[stderr]     at async _Command.execute (file:///opt/quarto/bin/quarto.js:102022:7)
+[stderr]     at async _Command.parseCommand (file:///opt/quarto/bin/quarto.js:101899:14)
+[stderr]     at async quarto4 (file:///opt/quarto/bin/quarto.js:187547:5)
+[stderr]     at async file:///opt/quarto/bin/quarto.js:187575:5
+[stderr]     at async file:///opt/quarto/bin/quarto.js:187430:14
+[stderr]     at async mainRunner (file:///opt/quarto/bin/quarto.js:187432:5)
+[stderr]     at async file:///opt/quarto/bin/quarto.js:187568:3[39m
+[stderr] 
+
+[stderr] 

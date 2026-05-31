@@ -1,31 +1,6 @@
-=== Preview Log === seg 13 abr 2026 23:22:20
+=== Preview Log === qua 15 abr 2026 22:50:30
 
-[stderr] 
-[stderr] Starting julia-1.12 kernel...
-[stderr] Done
-[stderr] 
-[stderr] 
-[stderr] Executing 'a-matriz-de-leslie.quarto_ipynb_1'
-[stderr] 
-[stderr]   Cell 1/6: ''......................
-[stderr] Done
-[stderr] 
-[stderr]   Cell 2/6: 'tbl-matriz-leslie'.....
-[stderr] Done
-[stderr] 
-[stderr]   Cell 3/6: 'tbl-autovalores'.......
-[stderr] Done
-[stderr] 
-[stderr]   Cell 4/6: 'tbl-distribuicao'......
-[stderr] Done
-[stderr] 
-[stderr]   Cell 5/6: 'fig-distribuicao'......
-[stderr] Done
-[stderr] 
-[stderr]   Cell 6/6: 'verifica-conjectura'...
-[stderr] Done
-[stderr] 
-[stderr] 
+
 [stderr] 
 [stderr] [1mpandoc [22m
 [stderr] 
@@ -73,22 +48,18 @@
 [stderr]   nocite: |
 [stderr]     @*
 [stderr]   code-appendix-header-level: 1
-[stderr]   comp_nativa: false
-[stderr]   modo_escrita: false
-[stderr]   usar_gerais: true
-[stderr]   usar_exts: true
-[stderr]   usar_prog: true
-[stderr]   quarto_id: 48029821
-[stderr]   quarto_modo_escrita: false
-[stderr]   quarto_comp_nativa: true
-[stderr]   quarto_extensoes:
-[stderr]     - cl-roberts (modificada)
+[stderr]   quarto_modo_escrita: true
+[stderr]   quarto_usar_local_fisico: false
+[stderr]   quarto_ignorar_ativos: false
+[stderr]   quarto_modo_rapido: true
 [stderr]   quarto_gerais:
 [stderr]     - ifsc.jpg
 [stderr]     - abnt-num.csl
 [stderr]     - bib.bib
-[stderr]   quarto_ignorar_ativos: false
-[stderr]   quarto_usar_local_fisico: true
+[stderr]   quarto_extensoes:
+[stderr]     - cl-roberts (modificada)
+[stderr]   quarto_id: 48029821
+[stderr]   quarto_comp_nativa: false
 [stderr]   geometry:
 [stderr]     - a4paper
 [stderr]     - top=3cm
@@ -97,6 +68,12 @@
 [stderr]     - bottom=2cm
 [stderr]   
 [stderr] 
+[stderr] [33mWARNING (/opt/quarto/share/filters/main.lua:23611) FloatRefTarget with no content: tbl-matriz-leslie
+[stderr] [39m
+[stderr] [33mWARNING (/opt/quarto/share/filters/main.lua:23611) FloatRefTarget with no content: tbl-autovalores
+[stderr] [39m[33mWARNING (/opt/quarto/share/filters/main.lua:23611) FloatRefTarget with no content: tbl-distribuicao
+[stderr] [39m[33mWARNING (/opt/quarto/share/filters/main.lua:23611) FloatRefTarget with no content: fig-distribuicao
+[stderr] [39m
 [stderr] [1m[34m
 [stderr] Rendering PDF[39m[22m
 [stderr] [1m[34mrunning lualatex - 1[39m[22m

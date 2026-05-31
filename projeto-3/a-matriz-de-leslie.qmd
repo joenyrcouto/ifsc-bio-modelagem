@@ -66,18 +66,15 @@ format:
         \setlength{\parindent}{1.2em}
         \setlength{\parskip}{0pt}
 engine: jupyter
-comp_nativa: false
-modo_escrita: false
-usar_gerais: true
-usar_exts: true
-usar_prog: true
-quarto_id: 48029821
-quarto_modo_escrita: false
-quarto_comp_nativa: true
+
+quarto_modo_escrita: true
+quarto_usar_local_fisico: false
+quarto_ignorar_ativos: false
+quarto_modo_rapido: true
+quarto_gerais: [ifsc.jpg, abnt-num.csl, bib.bib]
 quarto_extensoes: [cl-roberts (modificada)]
-quarto_gerais: [bib.bib, abnt-num.csl, ifsc.jpg]
-quarto_ignorar_ativos: true
-quarto_usar_local_fisico: true
+quarto_id: 48029821
+quarto_comp_nativa: false
 ---
 
 ```{julia}
